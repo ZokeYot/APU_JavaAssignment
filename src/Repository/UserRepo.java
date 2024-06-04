@@ -12,7 +12,7 @@ public class UserRepo {
     private final Map<UUID, User> userMap;
 
     public UserRepo() throws FileNotFoundException {
-        File user_file = new File("Text Files\\user.txt");
+        File user_file = new File("src\\Text Files\\user.txt");
         this.scanner = new Scanner(user_file);
         userMap = new HashMap<>();
         readFile();

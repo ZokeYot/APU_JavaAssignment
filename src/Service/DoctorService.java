@@ -9,6 +9,7 @@ import Repository.RepoFactory;
 import Repository.ScheduleRepo;
 import Exception.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,40 +28,40 @@ public class DoctorService {
         medicalRecordRepo = repoFactory.getMedicalRecordRepo();
     }
 
-//    // 1. Upload Daily Schedule
-//    public void uploadSchedule(Doctor doctor, ArrayList<String> timeSlot) throws ResourceNotFoundException {
-//        scheduleRepo.update(doctor.getUserID() , timeSlot);
-//    }
-//
-//    // 2. Track Appointment
-//    public List<Appointment> getAppointments(Doctor doctor){
-//        List<Appointment> appointments =  appointmentRepo.getUserAppointments(doctor);
-//
-//        return appointments.stream()
-//                .filter(appointment -> appointment.getAppointmentStatus().equals(PENDING))
-//                .collect(Collectors.toList());
-//    }
-//
-//    // 3. Cancel Appointment
-//    public void cancelAppointment(Appointment appointment) throws ResourceNotFoundException {
-//        appointmentRepo.update(appointment.getAppointmentId(), CANCELLED);
-//    }
-//
-//    // 4. Track Patient's Medical Record
-//    public List<MedicalRecord> getPatientsMedicalRecord(Doctor doctor){
-//        return medicalRecordRepo.getMedicalRecord(doctor);
-//    }
-//
-//    public MedicalRecord getMedicalRecord(MedicalRecord medicalRecord) throws ResourceNotFoundException {
-//        return medicalRecordRepo.find(medicalRecord.getMedicalRecordID())
-//                .orElseThrow(() -> new ResourceNotFoundException("Medical Record Not Found"));
-//    }
-//
-//    // 5. Add Medical Record
-//    public void createMedicalRecord(Appointment appointment, MedicalRecord medicalRecord) throws ResourceNotFoundException {
-//        medicalRecordRepo.create(medicalRecord);
-//        appointmentRepo.update(appointment.getAppointmentId(), COMPLETED);
-//    }
+    // 1. Upload Daily Schedule
+    public void uploadSchedule(Doctor doctor, ArrayList<String> timeSlot) throws ResourceNotFoundException, IOException {
+        scheduleRepo.update(doctor.getUserID() , timeSlot);
+    }
+
+    // 2. Track Appointment
+    public List<Appointment> getAppointments(Doctor doctor){
+        List<Appointment> appointments =  appointmentRepo.getUserAppointments(doctor);
+
+        return appointments.stream()
+                .filter(appointment -> appointment.getAppointmentStatus().equals(PENDING))
+                .collect(Collectors.toList());
+    }
+
+    // 3. Cancel Appointment
+    public void cancelAppointment(Appointment appointment) throws ResourceNotFoundException, IOException {
+        appointmentRepo.update(appointment.getAppointmentId(), CANCELLED);
+    }
+
+    // 4. Track Patient's Medical Record
+    public List<MedicalRecord> getPatientsMedicalRecord(Doctor doctor){
+        return medicalRecordRepo.getMedicalRecord(doctor);
+    }
+
+    public MedicalRecord getMedicalRecord(MedicalRecord medicalRecord) throws ResourceNotFoundException, IOException {
+        return medicalRecordRepo.find(medicalRecord.getMedicalRecordID())
+                .orElseThrow(() -> new ResourceNotFoundException("Medical Record Not Found"));
+    }
+
+    // 5. Add Medical Record
+    public void createMedicalRecord(Appointment appointment, MedicalRecord medicalRecord) throws ResourceNotFoundException, IOException {
+        medicalRecordRepo.create(medicalRecord);
+        appointmentRepo.update(appointment.getAppointmentId(), COMPLETED);
+    }
 
 
 }
