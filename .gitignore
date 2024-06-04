@@ -1,0 +1,29 @@
+# Build directories
+build/
+dist/
+target/
+
+# IDE-specific files
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+nbproject/
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Ant-specific temporary files
+*.xml~
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Dependency and environment files
+lib/
+.env
