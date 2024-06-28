@@ -69,6 +69,14 @@ public class PatientRepo {
         patientMap.put(patient.getUserID(), patient);
     }
 
+    public void update(UUID patientID, Patient newPatient) throws ResourceNotFoundException, IOException{
+        find(patientID)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor profile not found"));
+
+        patientMap.replace(patientID, newPatient);
+        updateFile();
+    }
+
     public void delete(UUID userId) throws ResourceNotFoundException, IOException{
         find(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient Profile Not Found"));

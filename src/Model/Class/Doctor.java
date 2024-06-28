@@ -20,6 +20,10 @@ public class Doctor extends User {
         return getUserID().toString()  + "|" + gender  + "|" + department;
     }
 
+    public String[] toArray(){
+        return new String[]{getName(), getEmail(), getPassword(), getGender(), getDepartment()};
+    }
+
 
     public String getGender() {
         return gender;

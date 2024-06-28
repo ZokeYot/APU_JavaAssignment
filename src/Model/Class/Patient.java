@@ -22,7 +22,12 @@ public class Patient extends User {
     }
 
     public String toString(){
-        return getUserID().toString() + "|" + gender + "|" + String.valueOf(age) + "|" + height + "|" + weight;
+        return getUserID().toString() + "|" + gender + "|" + age + "|" + height + "|" + weight;
+    }
+
+    public String[] toArray(){
+        return new String[]{getName(), getEmail(), getPassword(), getGender(),
+                String.valueOf(getHeight()), String.valueOf(getWeight())};
     }
 
 

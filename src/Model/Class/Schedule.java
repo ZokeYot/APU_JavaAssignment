@@ -1,28 +1,30 @@
 package Model.Class;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import java.util.List;
 
 
 public class Schedule {
 
     private Doctor doctor;
-    private ArrayList<String> timeslots;
+    private String date;
+    private List<TimeSlot> timeslots;
 
     public Schedule(){}
 
-    public Schedule(Doctor doctor, ArrayList<String> timeSlots){
+    public Schedule(Doctor doctor,String date, List<TimeSlot> timeSlots){
        this.doctor = doctor;
+       this.date = date;
        this.timeslots = timeSlots;
     }
 
 
     public String toString(){
         return doctor.getUserID().toString() + "|" +
-                String.join("\\|" , timeslots);
+                date + "|" +
+                String.join("|",  timeslots.stream().map(TimeSlot::toString).toList());
     }
+
 
 
     public Doctor getDoctor() {
@@ -33,11 +35,22 @@ public class Schedule {
         this.doctor = doctor;
     }
 
-    public ArrayList<String> getTimeslots() {
+    public List<TimeSlot> getTimeslots() {
         return timeslots;
     }
 
-    public void setTimeslots(ArrayList<String> timeslots) {
+    public void setTimeslots(List<TimeSlot> timeslots) {
         this.timeslots = timeslots;
     }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+
+
 }

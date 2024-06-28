@@ -81,6 +81,9 @@ public class MedicalRecordRepo {
 
     public Optional<MedicalRecord> find(UUID medicalRecordId){ return Optional.ofNullable(medicalRecordMap.get(medicalRecordId));}
 
+
+    public Optional<MedicalRecord> find(String medicalRecordId){ return Optional.ofNullable(medicalRecordMap.get(UUID.fromString(medicalRecordId)));}
+
     public void create(MedicalRecord medicalRecord) throws IOException{
         FileWriter fileWriter = new FileWriter("Text Files\\medical record.txt", true);
         fileWriter.write(medicalRecord.toString());

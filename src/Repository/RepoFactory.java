@@ -106,7 +106,7 @@ public class RepoFactory {
    public PaymentRepo getPaymentRepo(){
         if(paymentRepo == null){
             try{
-                paymentRepo = new PaymentRepo(getPaymentInformationRepo());
+                paymentRepo = new PaymentRepo(getPaymentInformationRepo(), getMedicalRecordRepo());
             }catch (FileNotFoundException | ResourceNotFoundException error){
                 throw new RuntimeException(error.getMessage());
             }

@@ -42,6 +42,10 @@ public class PaymentInformation {
                 validUntil;
     }
 
+    public String[] toArray(){
+        return new String[]{getTitle(), getCard_number(), getBank(), getValidUntil()};
+    }
+
     public UUID getPaymentInformationId() {
         return paymentInformationId;
     }

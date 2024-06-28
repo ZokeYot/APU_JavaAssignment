@@ -29,7 +29,7 @@ public class DoctorService {
     }
 
     // 1. Upload Daily Schedule
-    public void uploadSchedule(Doctor doctor, ArrayList<String> timeSlot) throws ResourceNotFoundException, IOException {
+    public void uploadSchedule(Doctor doctor, List<String> timeSlot) throws ResourceNotFoundException, IOException {
         scheduleRepo.update(doctor.getUserID() , timeSlot);
     }
 

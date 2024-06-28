@@ -32,16 +32,16 @@ public class LoginService {
         if(!user.getPassword().equals(password))
             throw new IncorrectCredentialException("Wrong Password");
 
-        if(user.getRole().equals("admin"))
-            return adminRepo.find(user.getUserID())
-                    .orElseThrow(() -> new ResourceNotFoundException("Admin Profile Not Found"));
-
-        else if(user.getRole().equals("doctor"))
-            return doctorRepo.find(user.getUserID())
-                    .orElseThrow(() -> new ResourceNotFoundException("Doctor Profile Not Found"));
-
-        else
-            return patientRepo.find(user.getUserID())
-                    .orElseThrow(() -> new ResourceNotFoundException("Patient Profile Not Found"));
+        switch (user.getRole()) {
+            case "admin":
+                return adminRepo.find(user.getUserID())
+                        .orElseThrow(() -> new ResourceNotFoundException("Admin Profile Not Found"));
+            case "doctor":
+                return doctorRepo.find(user.getUserID())
+                        .orElseThrow(() -> new ResourceNotFoundException("Doctor Profile Not Found"));
+            default:
+                return patientRepo.find(user.getUserID())
+                        .orElseThrow(() -> new ResourceNotFoundException("Patient Profile Not Found"));
+        }
     }
 }

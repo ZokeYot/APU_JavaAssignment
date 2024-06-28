@@ -39,14 +39,15 @@ public class AppointmentRepo{
             String appointmentID = line[0];
             Optional<Doctor> doctor = doctorRepo.find(line[1]);
             Optional<Patient> patient = patientRepo.find(line[2]);
-            String timeSlot = line[3];
-            String message = line[4];
-            String status = line[5];
+            String date = line[3];
+            String slot = line[4];
+            String message = line[5];
+            String status = line[6];
 
             if (!(doctor.isPresent() && patient.isPresent()))
                 throw new ResourceNotFoundException("Resources Not Found");
 
-            Appointment appointment = new Appointment(appointmentID, doctor.get(), patient.get(), timeSlot, message, status);
+            Appointment appointment = new Appointment(appointmentID, doctor.get(), patient.get(), date, slot, message, status);
 
             appointmentMap.put(UUID.fromString(appointmentID), appointment);
         }

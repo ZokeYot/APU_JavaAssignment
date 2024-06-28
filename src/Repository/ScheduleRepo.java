@@ -2,9 +2,11 @@ package Repository;
 
 import Model.Class.Doctor;
 import Model.Class.Schedule;
+import Model.Class.TimeSlot;
 
 import java.io.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import Exception.*;
@@ -31,13 +33,14 @@ public class ScheduleRepo {
             String[] line  = scanner.nextLine().trim().split("\\|");
             Doctor doctor = doctorRepo.find(line[0])
                     .orElseThrow(() -> new ResourceNotFoundException("Doctor Not Found"));
-            ArrayList<String> timeSlots = new ArrayList<>();
+            String date = line[1];
+            ArrayList<TimeSlot> timeSlots = new ArrayList<>();
 
-            for(int i = 1; i < line.length; i++)
-                timeSlots.add(TimeTable.getTimeSlot(line[i]));
-
-
-            scheduleMap.put(doctor.getUserID(), new Schedule(doctor, timeSlots));
+            for(int i = 2; i < line.length; i++){
+                String[] timeSlot = line[i].split(",");
+                timeSlots.add(new TimeSlot(timeSlot[0], timeSlot[1]));
+            }
+            scheduleMap.put(doctor.getUserID(), new Schedule(doctor, date, timeSlots));
         }
     }
 
@@ -68,13 +71,13 @@ public class ScheduleRepo {
         scheduleMap.put(schedule.getDoctor().getUserID() , schedule);
     }
 
-    public void update(UUID doctorId, ArrayList<String> timeSlots) throws ResourceNotFoundException, IOException{
+    public void update(UUID doctorId, List<TimeSlot> timeSlots) throws ResourceNotFoundException, IOException{
         Optional<Schedule> schedule = find(doctorId);
-
+        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
         if(schedule.isEmpty()){
             Doctor doctor = doctorRepo.find(doctorId)
                     .orElseThrow(() -> new ResourceNotFoundException("Doctor Not Found"));
-            create(new Schedule(doctor, timeSlots));
+            create(new Schedule(doctor, date, timeSlots));
         }
         else{
             schedule.get().setTimeslots(timeSlots);

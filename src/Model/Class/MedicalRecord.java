@@ -41,6 +41,12 @@ public class MedicalRecord extends Appointment {
                 paymentStatus.toString();
     }
 
+    public String[] toArray(){
+        return new String[]
+                {medicalRecordID.toString(), getDoctor().getName(), getPatient().getName(), getDate(),
+                getDiagnosisResult(), getRecommendation(), getPaymentStatus().toString()};
+    }
+
 
 
     public UUID getMedicalRecordID() {

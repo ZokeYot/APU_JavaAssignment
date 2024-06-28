@@ -6,7 +6,6 @@ import Repository.PatientRepo;
 import Repository.RepoFactory;
 import Repository.UserRepo;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public class RegisterService {
@@ -21,13 +20,18 @@ public class RegisterService {
 
     public Optional<Patient> register(User user, String gender, int age, double height, double weight){
       try{
+          
+          Optional<User> duplicate = userRepo.find(user.getEmail());
+          if(duplicate.isPresent())
+              throw new Exception("Duplicate email found: " + user.getEmail());
+         
           userRepo.create(user);
 
           Patient patient = new Patient(user, gender, age, height, weight);
           patientRepo.create(patient);
 
           return Optional.of((Patient) patient);
-      }catch (IOException error){
+      }catch (Exception error){
           return Optional.empty();
       }
     }
