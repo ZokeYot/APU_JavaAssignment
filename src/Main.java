@@ -1,13 +1,13 @@
 import Repository.RepoFactory;
-
-import View.Register;
+import View.RegisterView;
 
 public class Main {
 
     public static void main(String[] args) {
         RepoFactory repoFactory = new RepoFactory();
 
-        Register register = new Register(repoFactory);
+        RegisterView register = new RegisterView(repoFactory);
+
 
     }
 

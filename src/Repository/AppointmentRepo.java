@@ -32,9 +32,8 @@ public class AppointmentRepo{
     }
 
     private void readFile() throws ResourceNotFoundException {
+        System.out.println("Reading Appointment File.....");
         while (scanner.hasNextLine()) {
-            System.out.println("Reading Appointment File.....");
-
             String[] line = scanner.nextLine().trim().split("\\|");
             String appointmentID = line[0];
             Optional<Doctor> doctor = doctorRepo.find(line[1]);
@@ -43,18 +42,18 @@ public class AppointmentRepo{
             String slot = line[4];
             String message = line[5];
             String status = line[6];
+            String walkIn = line[7];
 
             if (!(doctor.isPresent() && patient.isPresent()))
                 throw new ResourceNotFoundException("Resources Not Found");
-
-            Appointment appointment = new Appointment(appointmentID, doctor.get(), patient.get(), date, slot, message, status);
-
+            Appointment appointment = new Appointment(appointmentID, doctor.get(), patient.get(), date, slot, message, status, walkIn);
+            System.out.println(appointment.getSlot());
             appointmentMap.put(UUID.fromString(appointmentID), appointment);
         }
     }
 
     private void updateFile() throws IOException{
-       BufferedWriter fileWriter = new BufferedWriter(new FileWriter("Text Files\\appointment.txt"));
+       BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\appointment.txt"));
 
        for(Appointment appointment : appointmentMap.values()) {
            fileWriter.write(appointment.toString());
@@ -77,7 +76,7 @@ public class AppointmentRepo{
     public List<Appointment> getUserAppointments(Doctor doctor){
         return appointmentMap
                 .values().stream()
-                .filter(appointment -> appointment.getPatient().getUserID().equals(doctor.getUserID()))
+                .filter(appointment -> appointment.getDoctor().getUserID().equals(doctor.getUserID()))
                 .collect(Collectors.toList());
     }
 
@@ -85,7 +84,7 @@ public class AppointmentRepo{
 
 
     public void create(Appointment appointment) throws IOException{
-        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("Text Files\\appointment.txt", true));
+        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\appointment.txt", true));
 
         fileWriter.write(appointment.toString());
         fileWriter.newLine();

@@ -4,9 +4,13 @@
  */
 package View.Patient;
 
+import Model.Class.MedicalRecord;
 import Model.Class.Patient;
 import Repository.RepoFactory;
 import Service.PatientService;
+
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 /**
  *
@@ -16,11 +20,20 @@ public class ViewMedicalRecord extends javax.swing.JFrame {
 
     private final Patient patient;
     private final PatientService patientService;
+    private final DefaultTableModel table;
+    private List<MedicalRecord> medicalRecordList;
+
 
     public ViewMedicalRecord(Patient patient, PatientService patientService) {
         initComponents();
+        setVisible(true);
         this.patient = patient;
         this.patientService = patientService;
+        this.table = (DefaultTableModel) medicalRecordTable.getModel();
+    }
+
+    private void init(){
+        medicalRecordList = patientService.getMedicalRecords(patient);
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

@@ -18,8 +18,8 @@ public class RegisterService {
         patientRepo = repoFactory.getPatientRepo();
     }
 
-    public Optional<Patient> register(User user, String gender, int age, double height, double weight){
-      try{
+    public Patient register(User user, String gender, int age, double height, double weight) throws Exception{
+
           
           Optional<User> duplicate = userRepo.find(user.getEmail());
           if(duplicate.isPresent())
@@ -30,10 +30,7 @@ public class RegisterService {
           Patient patient = new Patient(user, gender, age, height, weight);
           patientRepo.create(patient);
 
-          return Optional.of((Patient) patient);
-      }catch (Exception error){
-          return Optional.empty();
-      }
+          return patient;
     }
 
 }

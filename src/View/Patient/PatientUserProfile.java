@@ -5,8 +5,16 @@
 package View.Patient;
 
 import Model.Class.Patient;
+import Model.Class.PaymentInformation;
+import Repository.PaymentInformationRepo;
 import Repository.RepoFactory;
 import Service.PatientService;
+import View.Login;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -16,12 +24,57 @@ public class PatientUserProfile extends javax.swing.JFrame {
 
     private final Patient patient;
     private final PatientService patientService;
+    private final DefaultTableModel table;
+    private List<PaymentInformation> paymentInformationList;
 
     public PatientUserProfile(Patient patient, PatientService patientService) {
         initComponents();
+        setVisible(true);
         this.patient = patient;
         this.patientService = patientService;
+        this.table = (DefaultTableModel) paymentTable.getModel();
+        init();
     }
+
+    private void init(){
+        patientIDDisplay.setText(patient.getUserID().toString());
+        emailDisplay.setText(patient.getEmail());
+        nameDisplay.setText(patient.getName());
+        passwordDisplay.setText(patient.getPassword());
+        genderDisplay.setSelectedItem(patient.getGender());
+        heightDisplay.setText(String.valueOf(patient.getHeight()));
+        weightDisplay.setText(String.valueOf(patient.getWeight()));
+
+        table.setRowCount(0);
+        paymentInformationList = patientService.getPaymentInformation(patient);
+        paymentInformationList.forEach(paymentInformation -> table.addRow(new Object[]{
+                paymentInformation.getPaymentInformationId(),
+                paymentInformation.getTitle(),
+                paymentInformation.getCard_number(),
+                paymentInformation.getValidUntil()
+        }));
+    }
+
+    private void checkForm(String title, String bank, String cardNumber, String year) throws Exception{
+        String cardNumberRegex = "^\\d{10}$";
+        String yearRegex = "^\\d{4}$";
+
+        if(title.trim().isEmpty())
+            throw new Exception("The title cannot be empty");
+        if(bank.trim().isEmpty())
+            throw new Exception("The bank cannot be empty");
+        if(cardNumber.trim().isEmpty())
+            throw new Exception("The card number cannot be empty");
+        if(!cardNumber.matches(cardNumberRegex))
+            throw new Exception("Incorrect format for card number. The card number should be a 10 digit numbers");
+        if(year.trim().isEmpty())
+            throw new Exception("The valid until year cannot be empty");
+        if(!year.matches(yearRegex))
+            throw new Exception("Incorrect format for the valid until year");
+    }
+
+
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -31,23 +84,23 @@ public class PatientUserProfile extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        patientIDDisplay = new javax.swing.JTextField();
+        emailDisplay = new javax.swing.JTextField();
+        nameDisplay = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        genderDisplay = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        weightDisplay = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        heightDisplay = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         updateProfileButton = new javax.swing.JButton();
+        passwordDisplay = new javax.swing.JPasswordField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        paymentTable = new javax.swing.JTable();
         jLabel16 = new javax.swing.JLabel();
         cardNumberInput = new javax.swing.JTextField();
         monthInput = new javax.swing.JComboBox<>();
@@ -83,9 +136,9 @@ public class PatientUserProfile extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Email:");
 
-        jTextField1.setEditable(false);
+        patientIDDisplay.setEditable(false);
 
-        jTextField2.setEditable(false);
+        emailDisplay.setEditable(false);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Password: ");
@@ -93,7 +146,7 @@ public class PatientUserProfile extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Gender:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female" }));
+        genderDisplay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female" }));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setText("Height: ");
@@ -109,6 +162,11 @@ public class PatientUserProfile extends javax.swing.JFrame {
 
         updateProfileButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         updateProfileButton.setText("Update Profile");
+        updateProfileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateProfileButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -126,11 +184,11 @@ public class PatientUserProfile extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(genderDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(patientIDDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(emailDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(36, 36, 36)
@@ -138,18 +196,18 @@ public class PatientUserProfile extends javax.swing.JFrame {
                                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(nameDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                                    .addComponent(passwordDisplay)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(heightDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(weightDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -161,23 +219,23 @@ public class PatientUserProfile extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(patientIDDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(emailDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passwordDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(genderDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(weightDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(heightDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addComponent(updateProfileButton)
@@ -187,7 +245,7 @@ public class PatientUserProfile extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        paymentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -195,35 +253,33 @@ public class PatientUserProfile extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID ", "Name", "Card Number", "Valid Until"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        paymentTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                paymentTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(paymentTable);
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel16.setText("Valid Until : ");
 
-        cardNumberInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cardNumberInputActionPerformed(evt);
-            }
-        });
 
         monthInput.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
-        monthInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                monthInputActionPerformed(evt);
-            }
-        });
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel17.setText("/");
 
-        yearInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                yearInputActionPerformed(evt);
-            }
-        });
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel12.setText("Payment Information");
@@ -266,7 +322,7 @@ public class PatientUserProfile extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 936, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -294,23 +350,23 @@ public class PatientUserProfile extends javax.swing.JFrame {
                                 .addComponent(monthInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                        .addComponent(addButton)
+                                        .addGap(28, 28, 28)
+                                        .addComponent(deleteButton)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(updateButton))
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel17)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(yearInput, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(addButton)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(deleteButton)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(updateButton)))))))
+                                        .addComponent(yearInput, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
                 .addGap(27, 27, 27)
                 .addComponent(jLabel12)
                 .addGap(18, 18, 18)
@@ -327,16 +383,21 @@ public class PatientUserProfile extends javax.swing.JFrame {
                     .addComponent(jLabel17)
                     .addComponent(yearInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bankInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addButton)
-                    .addComponent(updateButton)
-                    .addComponent(deleteButton))
-                .addGap(17, 17, 17))
+                    .addComponent(deleteButton)
+                    .addComponent(updateButton))
+                .addGap(18, 18, 18))
         );
 
         backButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         logoutButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         logoutButton.setText("Logout");
@@ -393,67 +454,150 @@ public class PatientUserProfile extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        // TODO add your handling code here:
+        int response = JOptionPane.showConfirmDialog(
+                this,
+                "Logout ??",
+                "Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if(response == JOptionPane.YES_OPTION){
+            new Login(new RepoFactory());
+            dispose();
+        }
     }//GEN-LAST:event_logoutButtonActionPerformed
 
-    private void cardNumberInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cardNumberInputActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cardNumberInputActionPerformed
-
-    private void monthInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monthInputActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_monthInputActionPerformed
-
-    private void yearInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearInputActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_yearInputActionPerformed
-
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        // TODO add your handling code here:
+        try{
+            String title = nameInput.getText();
+            String bank  = bankInput.getText();
+            String cardNumber = cardNumberInput.getText();
+            String month = (String) monthInput.getSelectedItem();
+            String year = yearInput.getText();
+
+            checkForm(title, bank, cardNumber, year);
+
+            PaymentInformation paymentInformation = new PaymentInformation(patient, title, cardNumber, bank, month + "/" + year);
+            patientService.addPaymentInformation(paymentInformation);
+            JOptionPane.showMessageDialog(this, "New Payment Method Added", "Ok", JOptionPane.INFORMATION_MESSAGE);
+
+            nameInput.setText("");
+            bankInput.setText("");
+            cardNumberInput.setText("");
+            yearInput.setText("");
+            init();
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        // TODO add your handling code here:
+        try {
+            int index = paymentTable.getSelectedRow();
+
+            if (index == -1)
+                throw new Exception("No Row Selected");
+
+            String title = nameInput.getText();
+            String bank  = bankInput.getText();
+            String cardNumber = cardNumberInput.getText();
+            String month = (String) monthInput.getSelectedItem();
+            String year = yearInput.getText();
+
+            checkForm(title, bank, cardNumber, year);
+
+            PaymentInformation paymentInformation = paymentInformationList.get(index);
+
+            paymentInformation.setTitle(title);
+            paymentInformation.setBank(bank);
+            paymentInformation.setCard_number(cardNumber);
+            paymentInformation.setValidUntil(month + "/" + year);
+
+            JOptionPane.showMessageDialog(this, "New Payment Method Added", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            patientService.updatePaymentInformation(paymentInformation);
+            nameInput.setText("");
+            bankInput.setText("");
+            cardNumberInput.setText("");
+            yearInput.setText("");
+            init();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }//GEN-LAST:event_updateButtonActionPerformed
 
-    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        // TODO add your handling code here:
+
+        private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        try{
+            int index = paymentTable.getSelectedRow();
+
+            if(index == -1)
+                throw new Exception("No Row Selected");
+
+            PaymentInformation paymentInformation = paymentInformationList.get(index);
+            patientService.deletePaymentInformation(paymentInformation);
+            JOptionPane.showMessageDialog(this, "Payment Method Deleted", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            init();
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PatientUserProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PatientUserProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PatientUserProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PatientUserProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void updateProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProfileButtonActionPerformed
+        try{
+            String name = nameDisplay.getText();
+            String password = Arrays.toString(passwordDisplay.getPassword());
+            String gender = (String) genderDisplay.getSelectedItem();
+            String height = heightDisplay.getText();
+            String weight =weightDisplay.getText();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PatientUserProfile(new Patient(),new PatientService(new RepoFactory())).setVisible(true);
-            }
-        });
-    }
+
+            if(name.trim().isEmpty())
+                throw new Exception("Name cannot be empty");
+            if(password.trim().isEmpty())
+                throw new Exception("Password cannot be empty");
+            if(height.trim().isEmpty())
+                throw new Exception("Height cannot be empty");
+            if(weight.trim().isEmpty())
+                throw new Exception("Weight cannot be empty");
+            if(height.matches("[+]?[0-9]*\\\\.?[0-9]+\""))
+                throw new Exception("Height should be a number");
+            if(weight.matches("[+]?[0-9]*\\\\.?[0-9]+\""))
+                throw new Exception("Weight should be a number");
+
+            patient.setName(name);
+            patient.setPassword(password);
+            patient.setGender(gender);
+            patient.setHeight(Double.parseDouble(height));
+            patient.setWeight(Double.parseDouble(weight));
+
+            patientService.updatePatientProfile(patient);
+            JOptionPane.showMessageDialog(this, "Profile Updated", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            init();
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_updateProfileButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        new HomePatient(patient, patientService);
+        dispose();
+    }//GEN-LAST:event_backButtonActionPerformed
+
+    private void paymentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paymentTableMouseClicked
+        int index = paymentTable.getSelectedRow();
+
+        PaymentInformation paymentInformation = paymentInformationList.get(index);
+        String[] validUntil =  paymentInformation.getValidUntil().split("/");
+        String month = validUntil[0];
+        String year = validUntil[1];
+
+        nameInput.setText(paymentInformation.getTitle());
+        bankInput.setText(paymentInformation.getBank());
+        cardNumberInput.setText(paymentInformation.getCard_number());
+        monthInput.setSelectedItem(month);
+        yearInput.setText(year);
+    }//GEN-LAST:event_paymentTableMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
@@ -461,7 +605,9 @@ public class PatientUserProfile extends javax.swing.JFrame {
     private javax.swing.JTextField bankInput;
     private javax.swing.JTextField cardNumberInput;
     private javax.swing.JButton deleteButton;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JTextField emailDisplay;
+    private javax.swing.JComboBox<String> genderDisplay;
+    private javax.swing.JTextField heightDisplay;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -482,18 +628,16 @@ public class PatientUserProfile extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JButton logoutButton;
     private javax.swing.JComboBox<String> monthInput;
+    private javax.swing.JTextField nameDisplay;
     private javax.swing.JTextField nameInput;
+    private javax.swing.JPasswordField passwordDisplay;
+    private javax.swing.JTextField patientIDDisplay;
+    private javax.swing.JTable paymentTable;
     private javax.swing.JButton updateButton;
     private javax.swing.JButton updateProfileButton;
+    private javax.swing.JTextField weightDisplay;
     private javax.swing.JTextField yearInput;
     // End of variables declaration//GEN-END:variables
 }

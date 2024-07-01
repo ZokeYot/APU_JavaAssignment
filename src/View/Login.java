@@ -30,6 +30,7 @@ public class Login extends javax.swing.JFrame {
         this.repoFactory = repoFactory;
         loginService = new LoginService(repoFactory);
         initComponents();
+        setVisible(true);
     }
     
   
@@ -163,7 +164,7 @@ public class Login extends javax.swing.JFrame {
                 throw new Exception("Email cannot be empty !!! ");
             
             if(password.trim().equals(""))
-                throw new Exception("Passoword cannot be empty !!! ");
+                throw new Exception("Password cannot be empty !!! ");
             
             if(!matcher.matches())
                 throw new Exception("Invalid Email Format");               

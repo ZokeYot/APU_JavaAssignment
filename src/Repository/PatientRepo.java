@@ -25,8 +25,8 @@ public class PatientRepo {
     }
 
     private void readFile(){
+        System.out.println("Reading Patient File.....");
         while(scanner.hasNextLine()){
-            System.out.println("Reading Patient File.....");
             String[] line = scanner.nextLine().trim().split("\\|");
 
             UUID userId = UUID.fromString(line[0]);
@@ -43,7 +43,7 @@ public class PatientRepo {
 
 
     private void updateFile() throws IOException{
-        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("Text Files\\patient.txt"));
+        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\patient.txt"));
         for (Patient patient : patientMap.values()){
             fileWriter.write(patient.toString());
             fileWriter.newLine();
@@ -60,7 +60,7 @@ public class PatientRepo {
     public Optional<Patient> find(String userId){ return Optional.ofNullable(patientMap.get(UUID.fromString(userId)));}
 
     public void create(Patient patient) throws IOException {
-        FileWriter fileWriter = new FileWriter("Text Files\\patient.txt" , true);
+        FileWriter fileWriter = new FileWriter("src\\Text Files\\patient.txt" , true);
 
         fileWriter.write(patient.toString());
         fileWriter.write("\n");

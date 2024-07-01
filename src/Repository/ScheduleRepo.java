@@ -11,6 +11,10 @@ import java.util.*;
 
 import Exception.*;
 import Model.Class.TimeTable;
+import Model.Enum.AppointmentStatus;
+import Model.Enum.TimeSlotStatus;
+
+import javax.swing.text.html.Option;
 
 public class ScheduleRepo {
 
@@ -38,14 +42,16 @@ public class ScheduleRepo {
 
             for(int i = 2; i < line.length; i++){
                 String[] timeSlot = line[i].split(",");
-                timeSlots.add(new TimeSlot(timeSlot[0], timeSlot[1]));
+                String slot = TimeTable.getTimeSlot(timeSlot[0]);
+                String status = timeSlot[1];
+                timeSlots.add(new TimeSlot(slot, status));
             }
             scheduleMap.put(doctor.getUserID(), new Schedule(doctor, date, timeSlots));
         }
     }
 
     private void updateFile() throws IOException{
-        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("Text Files\\schedule.txt"));
+        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\schedule.txt"));
         for(Schedule schedule : scheduleMap.values()){
             fileWriter.write(schedule.toString());
             fileWriter.newLine();
@@ -62,7 +68,7 @@ public class ScheduleRepo {
     }
 
     private void create(Schedule schedule) throws IOException{
-        FileWriter fileWriter = new FileWriter("Text Files\\schedule.txt");
+        FileWriter fileWriter = new FileWriter("src\\Text Files\\schedule.txt", true);
 
         fileWriter.write(schedule.toString());
         fileWriter.write("\n");
@@ -85,6 +91,20 @@ public class ScheduleRepo {
         }
     }
 
+    public void updateTimeSlotStatus(Doctor doctor, String timeSlot, TimeSlotStatus status) throws ResourceNotFoundException, IOException{
+        Schedule schedule = find(doctor.getUserID())
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor Schedule Not Found"));
+
+        TimeSlot target = schedule.getTimeslots().stream()
+                            .filter(slot -> slot.getTimeslot().equals(timeSlot))
+                            .findFirst()
+                            .orElseThrow(() -> new ResourceNotFoundException("Time Slot Not Found"));
+
+        target.setStatus(status);
+        updateFile();
+    }
+
+
     public void delete(UUID doctorId) throws ResourceNotFoundException, IOException{
         Schedule schedule = find(doctorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Schedule Not Found !!"));
@@ -92,4 +112,5 @@ public class ScheduleRepo {
         scheduleMap.remove(doctorId);
         updateFile();
     }
+
 }

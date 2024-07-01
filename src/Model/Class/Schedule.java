@@ -1,6 +1,9 @@
 package Model.Class;
 
 
+import Model.Enum.TimeSlotStatus;
+
+import java.sql.Time;
 import java.util.List;
 
 
@@ -22,7 +25,8 @@ public class Schedule {
     public String toString(){
         return doctor.getUserID().toString() + "|" +
                 date + "|" +
-                String.join("|",  timeslots.stream().map(TimeSlot::toString).toList());
+                String.join("|",
+                        timeslots.stream().map(timeSlot -> TimeTable.getIndex(timeSlot.getTimeslot()) + "," + timeSlot.getStatus()).toList());
     }
 
 

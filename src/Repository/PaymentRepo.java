@@ -48,7 +48,7 @@ public class PaymentRepo {
     }
 
     private void updateFile() throws IOException{
-        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("Text Files\\payment.txt"));
+        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\payment.txt"));
         for(Payment payment : paymentMap.values()){
             fileWriter.write(payment.toString());
             fileWriter.newLine();
@@ -65,7 +65,7 @@ public class PaymentRepo {
     public Optional<Payment> find(String paymentId){ return Optional.ofNullable(paymentMap.get(UUID.fromString(paymentId)));}
 
     public void create(Payment payment) throws IOException{
-        FileWriter fileWriter = new FileWriter("Text Files\\payment.txt", true);
+        FileWriter fileWriter = new FileWriter("src\\Text Files\\payment.txt", true);
         fileWriter.write(payment.toString());
         fileWriter.write("\n");
 

@@ -4,9 +4,18 @@
  */
 package View.Patient;
 
+import Model.Class.Doctor;
 import Model.Class.Patient;
-import Repository.RepoFactory;
+import Model.Class.Schedule;
+import Model.Class.TimeSlot;
+import Model.Enum.AppointmentStatus;
+import Model.Enum.TimeSlotStatus;
 import Service.PatientService;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -16,12 +25,22 @@ public class ViewTimeSlot extends javax.swing.JFrame {
 
     private final Patient patient;
     private final PatientService patientService;
+    private final DefaultTableModel table;
+    private final DefaultComboBoxModel comboBox;
+    private final List<Schedule> scheduleList;
 
     public ViewTimeSlot(Patient patient, PatientService patientService) {
         initComponents();
+        setVisible(true);
         this.patient = patient;
         this.patientService = patientService;
+        this.table = (DefaultTableModel) scheduleTable.getModel();
+        this.comboBox = (DefaultComboBoxModel) doctorInput.getModel();
+        this.scheduleList = patientService.getSchedules();
+        init();
+
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -32,9 +51,9 @@ public class ViewTimeSlot extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         doctorInput = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        dayDisplay = new javax.swing.JTextField();
+        doctorDisplay = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        timeDisplay = new javax.swing.JTextField();
+        timeSlotDisplay = new javax.swing.JTextField();
         makeAppointmentButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
 
@@ -51,44 +70,62 @@ public class ViewTimeSlot extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "DoctorID ", "Doctor ", "Date", "Time Slot"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        scheduleTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                scheduleTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(scheduleTable);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setText("Doctor :");
 
         doctorInput.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        doctorInput.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        doctorInput.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "all" }));
+        doctorInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                doctorInputActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel3.setText("Day : ");
+        jLabel3.setText("Doctor:");
 
-        dayDisplay.setEditable(false);
-        dayDisplay.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        dayDisplay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dayDisplayActionPerformed(evt);
-            }
-        });
+        doctorDisplay.setEditable(false);
+        doctorDisplay.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel4.setText("Time: ");
+        jLabel4.setText("Time Slot: ");
 
-        timeDisplay.setEditable(false);
-        timeDisplay.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        timeDisplay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                timeDisplayActionPerformed(evt);
-            }
-        });
+        timeSlotDisplay.setEditable(false);
+        timeSlotDisplay.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
         makeAppointmentButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         makeAppointmentButton.setText("Make Appointment");
+        makeAppointmentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                makeAppointmentButtonActionPerformed(evt);
+            }
+        });
 
         backButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -98,23 +135,28 @@ public class ViewTimeSlot extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(makeAppointmentButton)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(doctorInput, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 982, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dayDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(57, 57, 57)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(timeDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(backButton)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(doctorInput, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(doctorDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(timeSlotDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(backButton))
+                        .addGap(392, 392, 392)))
                 .addContainerGap(22, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 982, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,9 +174,9 @@ public class ViewTimeSlot extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dayDisplay)
+                    .addComponent(doctorDisplay)
                     .addComponent(jLabel4)
-                    .addComponent(timeDisplay))
+                    .addComponent(timeSlotDisplay))
                 .addGap(27, 27, 27)
                 .addComponent(makeAppointmentButton)
                 .addGap(17, 17, 17))
@@ -143,52 +185,96 @@ public class ViewTimeSlot extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void dayDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dayDisplayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dayDisplayActionPerformed
 
-    private void timeDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeDisplayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_timeDisplayActionPerformed
+    private void init(){
+        table.setRowCount(0);
+        showAllTimeSlot();
+
+        scheduleList.forEach(schedule -> comboBox.addElement(schedule.getDoctor().getName()));
+    }
+    private void showAllTimeSlot(){
+        scheduleList.stream()
+                .flatMap(schedule -> schedule.getTimeslots().stream()
+                        .filter(timeSlot -> timeSlot.getStatus().equals(TimeSlotStatus.AVAILABLE))
+                        .map(slot -> new Object[]{schedule.getDoctor().getUserID(), schedule.getDoctor().getName(), schedule.getDate(), slot.getTimeslot()}))
+                .forEach(table::addRow);
+    }
+
+    private void showDoctorTimeSlot(String doctorName){
+        scheduleList.stream()
+                .filter(schedule -> schedule.getDoctor().getName().equals(doctorName))
+                .flatMap(schedule -> schedule.getTimeslots().stream()
+                        .filter(timeSlot -> timeSlot.getStatus().equals(TimeSlotStatus.AVAILABLE))
+                        .map(slot -> new Object[]{schedule.getDoctor().getUserID(),schedule.getDoctor().getName(), schedule.getDate(), slot.getTimeslot()}))
+                .forEach(table::addRow);
+    }
+
+    private Doctor getSelectedDoctor(UUID doctorId) throws Exception{
+        return scheduleList.stream()
+                .map(Schedule::getDoctor)
+                .filter(doctor -> doctor.getUserID().equals(doctorId))
+                .findFirst()
+                .orElseThrow(() -> new Exception("Doctor not found"));
+    }
+
+    private void scheduleTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scheduleTableMouseClicked
+        try{
+            int index = scheduleTable.getSelectedRow();
+            UUID doctorId = (UUID) table.getValueAt(index, 0);
+
+            if(index == -1)
+                throw new Exception("No Row Selected");
+
+            Doctor doctor = getSelectedDoctor(doctorId);
+            String selectedSlot = scheduleTable.getValueAt(index, 3).toString();
+
+            doctorDisplay.setText(doctor.getName());
+            timeSlotDisplay.setText(selectedSlot);
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_scheduleTableMouseClicked
+
+    private void doctorInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doctorInputActionPerformed
+        String selected = comboBox.getSelectedItem().toString();
+        table.setRowCount(0);
+        if(selected.equals("all"))
+            showAllTimeSlot();
+        else
+            showDoctorTimeSlot(selected);
+    }//GEN-LAST:event_doctorInputActionPerformed
+
+    private void makeAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeAppointmentButtonActionPerformed
+        try{
+            int index = scheduleTable.getSelectedRow();
+            UUID doctorId = (UUID) table.getValueAt(index, 0);
+
+            if(index == -1)
+                throw new Exception("No Row Selected");
+
+            Doctor doctor = getSelectedDoctor(doctorId);
+            String selectedSlot = scheduleTable.getValueAt(index, 3).toString();
+
+            new MakeAppointment(patient, patientService, doctor, selectedSlot);
+            dispose();
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_makeAppointmentButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        new HomePatient(patient, patientService);
+        dispose();
+    }//GEN-LAST:event_backButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewTimeSlot.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewTimeSlot.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewTimeSlot.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewTimeSlot.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ViewTimeSlot(new Patient(),new PatientService(new RepoFactory())).setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
-    private javax.swing.JTextField dayDisplay;
+    private javax.swing.JTextField doctorDisplay;
     private javax.swing.JComboBox<String> doctorInput;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -197,6 +283,6 @@ public class ViewTimeSlot extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton makeAppointmentButton;
     private javax.swing.JTable scheduleTable;
-    private javax.swing.JTextField timeDisplay;
+    private javax.swing.JTextField timeSlotDisplay;
     // End of variables declaration//GEN-END:variables
 }

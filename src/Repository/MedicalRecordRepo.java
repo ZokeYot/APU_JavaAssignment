@@ -45,7 +45,7 @@ public class MedicalRecordRepo {
                     .orElseThrow(() -> new ResourceNotFoundException("Appointment Not Found"));
 
             MedicalRecord medicalRecord = new MedicalRecord(appointment, medicalRecordId, diagnosisResult, recommendation, status);
-            medicalRecordMap.put(appointmentId, medicalRecord);
+            medicalRecordMap.put(medicalRecord.getMedicalRecordID(), medicalRecord);
         }
 
         for(MedicalRecord medicalRecord : medicalRecordMap.values()){
@@ -63,7 +63,7 @@ public class MedicalRecordRepo {
 
 
     private void updateFile() throws IOException {
-        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("Text Files\\medical record.txt"));
+        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\medical record.txt"));
         for(MedicalRecord medicalRecord : medicalRecordMap.values()){
             fileWriter.write(medicalRecord.toString());
             fileWriter.newLine();
@@ -85,7 +85,7 @@ public class MedicalRecordRepo {
     public Optional<MedicalRecord> find(String medicalRecordId){ return Optional.ofNullable(medicalRecordMap.get(UUID.fromString(medicalRecordId)));}
 
     public void create(MedicalRecord medicalRecord) throws IOException{
-        FileWriter fileWriter = new FileWriter("Text Files\\medical record.txt", true);
+        FileWriter fileWriter = new FileWriter("src\\Text Files\\medical record.txt", true);
         fileWriter.write(medicalRecord.toString());
         fileWriter.write("\n");
 

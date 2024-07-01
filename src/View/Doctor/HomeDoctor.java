@@ -20,17 +20,17 @@ public class HomeDoctor extends javax.swing.JFrame {
 
     public HomeDoctor(Doctor doctor, RepoFactory repoFactory){
         initComponents();
+        setVisible(true);
         this.doctor = doctor;
         this.doctorService = new DoctorService(repoFactory);
     }
 
     public HomeDoctor(Doctor doctor, DoctorService doctorService){
         initComponents();
+        setVisible(true);
         this.doctor = doctor;
         this.doctorService = doctorService;
     }
-      
-
 
   
     @SuppressWarnings("unchecked")
@@ -70,6 +70,11 @@ public class HomeDoctor extends javax.swing.JFrame {
         });
 
         profileButton.setText("View Doctor Profile");
+        profileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profileButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,38 +127,12 @@ public class HomeDoctor extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_appointmentsButtonActionPerformed
 
-  
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(HomeDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(HomeDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(HomeDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(HomeDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void profileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButtonActionPerformed
+        new DoctorUserProfile(doctor, doctorService);
+        dispose();
+    }//GEN-LAST:event_profileButtonActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new HomeDoctor(new Doctor(), new RepoFactory()).setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton appointmentsButton;

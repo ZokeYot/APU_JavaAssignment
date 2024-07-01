@@ -49,7 +49,7 @@ public class UserRepo {
     public Optional<User> find(String email){
         return userMap.values()
                 .stream()
-                .filter(user -> user.getEmail().equals(email))
+                .filter(user -> user.getEmail().equalsIgnoreCase(email))
                 .findFirst();
     }
 
@@ -60,7 +60,7 @@ public class UserRepo {
 
     public void create(User user) throws IOException {
 
-        FileWriter fileWriter = new FileWriter("Text Files\\user.txt", true);
+        FileWriter fileWriter = new FileWriter("src\\Text Files\\user.txt", true);
 
         System.out.println(user.toString());
         fileWriter.write(user.toString());

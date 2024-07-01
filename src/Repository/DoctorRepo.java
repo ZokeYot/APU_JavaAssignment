@@ -37,7 +37,7 @@ public class DoctorRepo {
     }
 
     private void updateFile() throws IOException{
-        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("Text Files\\doctor.txt"));
+        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\doctor.txt"));
 
         for(Doctor doctor : doctorMap.values()){
             fileWriter.write(doctor.toString());
@@ -55,7 +55,7 @@ public class DoctorRepo {
     public Optional<Doctor> find(String userId){ return Optional.ofNullable(doctorMap.get(UUID.fromString(userId)));}
 
     public void create(Doctor doctor) throws IOException{
-        FileWriter fileWriter = new FileWriter("Text Files\\doctor.txt" , true);
+        FileWriter fileWriter = new FileWriter("src\\Text Files\\doctor.txt" , true);
         fileWriter.write(doctor.toString());
         fileWriter.write("\n");
 

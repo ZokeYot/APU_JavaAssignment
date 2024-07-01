@@ -11,6 +11,11 @@ public class TimeSlot {
         this.status = TimeSlotStatus.valueOf(status);
     }
 
+    public TimeSlot(String timeslot){
+        this.timeslot = timeslot;
+        this.status = TimeSlotStatus.AVAILABLE;
+    }
+
     public String toString(){
         return timeslot + "," + status.toString();
     }

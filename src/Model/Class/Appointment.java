@@ -39,6 +39,7 @@ public class Appointment {
         this.doctor = doctor;
         this.patient = patient;
         this.date = date;
+        this.slot = slot;
         this.message = message;
         this.appointmentStatus = AppointmentStatus.valueOf(status);
         this.walkIn = Boolean.valueOf(walkIn);

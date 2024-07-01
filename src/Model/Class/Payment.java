@@ -26,10 +26,9 @@ public class Payment {
     }
 
     // For create new payment one
-    public Payment(MedicalRecord medicalRecord, PaymentInformation paymentInformation, Integer amount){
+    public Payment(MedicalRecord medicalRecord, Integer amount){
         this.paymentId = UUID.randomUUID();
         this.medicalRecord = medicalRecord;
-        this.paymentInformation = paymentInformation;
         this.amount = amount;
         this.status = PaymentStatus.UNPAID;
     }

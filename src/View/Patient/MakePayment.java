@@ -19,6 +19,7 @@ public class MakePayment extends javax.swing.JFrame {
 
     public MakePayment(Patient patient, PatientService patientService) {
         initComponents();
+        setVisible(true);
         this.patient = patient;
         this.patientService = patientService;
     }

@@ -6,24 +6,24 @@ import Exception.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PaymentInformationRepo {
 
     private final Map<UUID, PaymentInformation> paymentInformationMap;
-    private final Map<UUID, List<PaymentInformation>> patientPaymentInformationMap;
     private final PatientRepo patientRepo;
     private final Scanner scanner;
 
     public PaymentInformationRepo(PatientRepo patientRepo) throws FileNotFoundException, ResourceNotFoundException {
         this.patientRepo = patientRepo;
         paymentInformationMap = new HashMap<>();
-        patientPaymentInformationMap = new HashMap<>();
         scanner = new Scanner(new File("src\\Text Files\\payment information.txt"));
+        readFile();
     }
 
     private void readFile() throws ResourceNotFoundException{
+        System.out.println("Reading Payment Information File.....");
         while(scanner.hasNextLine()){
-            System.out.println("Reading Medical Record File.....");
             String[] line = scanner.nextLine().trim().split("\\|");
 
             String paymentInformationId = line[0];
@@ -39,16 +39,10 @@ public class PaymentInformationRepo {
 
             paymentInformationMap.put(paymentInformation.getPaymentInformationId() , paymentInformation);
         }
-        for(PaymentInformation paymentInformation : paymentInformationMap.values()){
-            UUID patientId = paymentInformation.getPatient().getUserID();
-            patientPaymentInformationMap
-                    .computeIfAbsent(patientId, k -> new ArrayList<>())
-                    .add(paymentInformation);
-        }
     }
 
     private void updateFile() throws IOException{
-        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("Text Files\\patient.txt"));
+        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\payment information.txt"));
         for(PaymentInformation paymentInformation : paymentInformationMap.values()){
             fileWriter.write(paymentInformation.toString());
             fileWriter.newLine();
@@ -56,18 +50,19 @@ public class PaymentInformationRepo {
         fileWriter.close();
     }
 
-    public Map<UUID, PaymentInformation> getPaymentInformationMap(){ return paymentInformationMap;}
 
-    public List<PaymentInformation> getPaymentInformationList(){ return paymentInformationMap.values().stream().toList();}
-
-    public List<PaymentInformation> getPatientPaymentInformation(Patient patient){ return patientPaymentInformationMap.get(patient.getUserID()); }
+    public List<PaymentInformation> getPatientPaymentInformation(Patient patient){
+        return paymentInformationMap.values().stream()
+                .filter(paymentInformation -> paymentInformation.getPatient().equals(patient))
+                .collect(Collectors.toList());
+    }
 
     public Optional<PaymentInformation> find(UUID paymentInformationId){ return Optional.ofNullable(paymentInformationMap.get(paymentInformationId));}
 
     public Optional<PaymentInformation> find(String paymentInformationId){ return Optional.ofNullable(paymentInformationMap.get(UUID.fromString(paymentInformationId)));}
 
     public void create(PaymentInformation paymentInformation) throws IOException{
-        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("Text Files\\patient.txt" , true));
+        BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\payment information.txt" , true));
 
         fileWriter.write(paymentInformation.toString());
         fileWriter.newLine();
@@ -85,13 +80,14 @@ public class PaymentInformationRepo {
         updateFile();
     }
 
-    public void delete(UUID paymentInformationId) throws IOException{
+    public void delete(UUID paymentInformationId) throws IOException, ResourceNotFoundException{
+        PaymentInformation paymentInformation = find(paymentInformationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment Information Not Found"));
         paymentInformationMap.remove(paymentInformationId);
         updateFile();
     }
 
     public void deleteAll(UUID patientId) throws IOException{
-        patientPaymentInformationMap.remove(patientId);
         paymentInformationMap.entrySet()
                 .removeIf(entry -> entry.getValue().getPatient().getUserID().equals(patientId));
         updateFile();

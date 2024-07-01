@@ -23,41 +23,15 @@ public class RegisterView extends javax.swing.JFrame  {
 
     private RepoFactory repoFactory;
     private RegisterService registerService;
-    private boolean unmatchPassword;
-         
-    public RegisterView() {
-        initComponents();
-        setVisible(true);
-        this.unmatchPassword = false;
-    }
+
     
     public RegisterView(RepoFactory repoFactory){
         this.repoFactory = repoFactory;
         this.registerService = new RegisterService(repoFactory);
+        initComponents();
+        setVisible(true);
     }
 
-    private void checkForm() throws Exception{
-            String name = nameInput.getText();
-            String email = emailInput.getText();
-            String password = String.valueOf(passwordInput.getPassword());
-            String confirmPassword = String.valueOf(confirmPasswordInput.getPassword());
-            int age = (int)ageInput.getValue();
-            String gender = (String)genderInput.getSelectedItem();
-            double height = Double.parseDouble(heightInput.getText());
-            double weight = Double.parseDouble(weightInput.getText());
-            
-            Pattern pattern = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
-            Matcher matcher = pattern.matcher(email);
-            
-            if(name.trim().equals(""))
-                throw new Exception("Name cannot be null");
-            if (email.trim().equals(""))
-                throw new Exception("Email cannot be null");
-            if(password.trim().equals(""))
-                throw new Exception("Password cannot be null");
-                      
-   
-    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -333,8 +307,7 @@ public class RegisterView extends javax.swing.JFrame  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
-       try{
-            checkForm();
+        try{
             String name = nameInput.getText();
             String email = emailInput.getText();
             String password = String.valueOf(passwordInput.getPassword());
@@ -343,17 +316,31 @@ public class RegisterView extends javax.swing.JFrame  {
             String gender = (String)genderInput.getSelectedItem();
             double height = Double.parseDouble(heightInput.getText());
             double weight = Double.parseDouble(weightInput.getText());
-       
-            System.out.println(name +  email + password + confirmPassword + age + gender + height + weight);
-       
-            User newPatient = new User(name, password, email, "patient");
-            Optional<Patient> patient = registerService.register(newPatient, gender, age, height, weight);
-            
-            new HomePatient(patient.get(), repoFactory);
+
+            Pattern pattern = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
+            Matcher matcher = pattern.matcher(email);
+
+            if(name.trim().isEmpty())
+                throw new Exception("Name cannot be null");
+            if (email.trim().isEmpty())
+                throw new Exception("Email cannot be null");
+            if(password.trim().isEmpty())
+                throw new Exception("Password cannot be null");
+            if(!matcher.matches())
+                throw new Exception("Incorrect email format");
+            if(!password.equals(confirmPassword))
+                throw new Exception("Password does not match");
+
+            User user = new User(name,email, password, "patient");
+            Patient patient = registerService.register(user, gender, age, height, weight);
+
+
+            JOptionPane.showMessageDialog(this, "New Patient Created", "Welcome" , JOptionPane.INFORMATION_MESSAGE);
+            new HomePatient(patient, repoFactory);
             dispose();
-       }catch(Exception e){
-           JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-       }
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
     }//GEN-LAST:event_registerButtonActionPerformed
 
@@ -390,13 +377,7 @@ public class RegisterView extends javax.swing.JFrame  {
         // TODO add your handling code here:
     }//GEN-LAST:event_confirmPasswordInputActionPerformed
 
-    
-    public static void main(String[] args){
-        RegisterView some = new RegisterView();
-      
-        
-    }
- 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner ageInput;
     private javax.swing.JLabel ageLabel;

@@ -7,6 +7,8 @@ package View.Doctor;
 import Model.Class.Doctor;
 import Repository.RepoFactory;
 import Service.DoctorService;
+import View.Patient.HomePatient;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
@@ -21,23 +23,26 @@ public class UploadSchedule extends javax.swing.JFrame {
     private final Set<String> selectedSlots;
 
     
-    private static final String[] COL_HEADER = {
+    private final String[] COL_HEADER = {
             "Day / Time", "8.00 - 9.00", "9.00 - 10.00", "10.00 - 11.00", "11.00 - 12.00",
             "12.00 - 13.00", "13.00 - 14.00", "14.00 - 15.00", "15.00 - 16.00", "16.00 - 17.00"};
-    private static final String[][] ROWS_DATA = {
-            {"Today", "", "", "", "", "", "", "", "", ""},};
+    private final String[][] ROWS_DATA = {
+            {"Today", "", "", "", "", "", "", "", "", ""}};
 
 
     public UploadSchedule(Doctor doctor, DoctorService doctorService) {
+        initComponents();
+        setVisible(true);
         this.doctor = doctor;
         this.doctorService = doctorService;
-        initComponents();
         selectedSlots = new HashSet<>();
         setupTable();
 
     }
 
     private void setupTable() {
+        if(!doctorService.getDoctorSchedule(doctor).isEmpty())
+            selectedSlots.addAll(doctorService.getDoctorSchedule(doctor));
         DefaultTableModel model = new DefaultTableModel(ROWS_DATA, COL_HEADER){
             @Override
             public Object getValueAt(int row, int column) {
@@ -104,32 +109,17 @@ public class UploadSchedule extends javax.swing.JFrame {
         scheduleTable.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         scheduleTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Monday", null, null, null, null, null, null, null, null, null},
-                {"Tuesday", null, null, null, null, null, null, null, null, null},
-                {"Wednesday", null, null, null, null, null, null, null, null, null},
-                {"Thursday", null, null, null, null, null, null, null, null, null},
-                {"Friday", null, null, null, null, null, null, null, null, null},
-                {"", null, null, null, null, null, null, null, null, null}
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Day / Time", "8.00 - 9.00", "9.00 - 10.00", "10.00 - 11.00", "11.00 - 12.00", "12.00 - 13.00", "13.00 - 14.00", "14.00 - 15.00", "15.00 - 16.00", "16.00 - 17.00"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                true, false, false, false, false, false, false, false, false, false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
         scheduleTable.setColumnSelectionAllowed(true);
         scheduleTable.setRowHeight(30);
         scheduleTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -139,9 +129,6 @@ public class UploadSchedule extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(scheduleTable);
         scheduleTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        if (scheduleTable.getColumnModel().getColumnCount() > 0) {
-            scheduleTable.getColumnModel().getColumn(0).setPreferredWidth(100);
-        }
 
         resetButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         resetButton.setText("Reset");
@@ -184,10 +171,11 @@ public class UploadSchedule extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(resetButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(uploadButton)
-                                .addGap(62, 62, 62)))
+                                .addGap(56, 56, 56)))
                         .addGap(18, 18, 18))))
         );
         layout.setVerticalGroup(
@@ -199,11 +187,11 @@ public class UploadSchedule extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                .addGap(43, 43, 43)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(resetButton)
                     .addComponent(uploadButton))
-                .addGap(17, 17, 17))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -217,6 +205,8 @@ public class UploadSchedule extends javax.swing.JFrame {
 
             doctorService.uploadSchedule(doctor, selectedSlots.stream().toList());
             JOptionPane.showMessageDialog(this, "Schedule Uploaded");
+            new HomeDoctor(doctor, doctorService);
+            dispose();
         }catch (Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -233,48 +223,9 @@ public class UploadSchedule extends javax.swing.JFrame {
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         selectedSlots.clear();
-        for (int row = 0; row < 5; row++) {
-            for (int col = 1; col < COL_HEADER.length; col++) {
-                scheduleTable.getModel().setValueAt("", row, col);
-            }
-        }
+        for (int col = 1; col < COL_HEADER.length; col++)
+            scheduleTable.getModel().setValueAt("", 0, col);
     }//GEN-LAST:event_resetButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UploadSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UploadSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UploadSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UploadSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UploadSchedule(new Doctor(), new DoctorService(new RepoFactory())).setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;

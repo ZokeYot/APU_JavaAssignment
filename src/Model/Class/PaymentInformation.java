@@ -12,9 +12,6 @@ public class PaymentInformation {
     private String bank;
     private String validUntil;
 
-
-    public PaymentInformation(){}
-
     public PaymentInformation(Patient patient,String paymentInformationId, String title, String card_number, String bank, String validUntil){
         this.patient = patient;
         this.paymentInformationId = UUID.fromString(paymentInformationId);
