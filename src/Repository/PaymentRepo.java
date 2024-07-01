@@ -2,7 +2,7 @@ package Repository;
 
 import Model.Class.MedicalRecord;
 import Model.Class.Payment;
-import Model.Class.PaymentInformation;
+import Model.Class.PaymentMethod;
 import Model.Enum.PaymentStatus;
 import Exception.*;
 
@@ -11,13 +11,13 @@ import java.util.*;
 
 public class PaymentRepo {
 
-    private final PaymentInformationRepo paymentInformationRepo;
+    private final PaymentMethodRepo paymentMethodRepo;
     private final MedicalRecordRepo medicalRecordRepo;
     private final Scanner scanner;
     private Map<UUID, Payment> paymentMap;
 
-    public PaymentRepo(PaymentInformationRepo paymentInformationRepo, MedicalRecordRepo medicalRecordRepo) throws FileNotFoundException, ResourceNotFoundException {
-        this.paymentInformationRepo = paymentInformationRepo;
+    public PaymentRepo(PaymentMethodRepo paymentMethodRepo, MedicalRecordRepo medicalRecordRepo) throws FileNotFoundException, ResourceNotFoundException {
+        this.paymentMethodRepo = paymentMethodRepo;
         this.medicalRecordRepo = medicalRecordRepo;
         scanner = new Scanner(new File("src\\Text Files\\payment.txt"));
         paymentMap = new HashMap<>();
@@ -26,23 +26,25 @@ public class PaymentRepo {
     }
 
     private void readFile() throws ResourceNotFoundException {
+        System.out.println("Reading Payment File.....");
         while (scanner.hasNextLine()) {
-            System.out.println("Reading Payment File.....");
-
             String[] line = scanner.nextLine().trim().split("\\|");
-            String paymentId = line[1];
-            String medicalRecordId = line[2];
-            String paymentInformationId = line[3];
-            String amount = line[4];
-            String status = line[5];
+            String paymentId = line[0];
+            String medicalRecordId = line[1];
+            String paymentMethodId = line[2];
+            String amount = line[3];
+            String status = line[4];
 
-            PaymentInformation paymentInformation = paymentInformationRepo.find(paymentInformationId)
+            PaymentMethod paymentMethod = new PaymentMethod();
+
+            if(!Objects.equals(paymentMethodId, "null"))
+                paymentMethod = paymentMethodRepo.find(paymentMethodId)
                     .orElseThrow(() -> new ResourceNotFoundException("Payment Information Not Found"));
 
             MedicalRecord medicalRecord = medicalRecordRepo.find(medicalRecordId)
                     .orElseThrow(() -> new ResourceNotFoundException("Medical Record Not Found"));
 
-            Payment payment = new Payment(paymentId,medicalRecord, paymentInformation, amount, status);
+            Payment payment = new Payment(paymentId,medicalRecord, paymentMethod, amount, status);
             paymentMap.put(payment.getPaymentId(), payment);
         }
     }
@@ -74,7 +76,16 @@ public class PaymentRepo {
         updateFile();
     }
 
-    public void update(UUID paymentId, PaymentStatus status) throws ResourceNotFoundException, IOException{
+    public void update(Payment payment) throws ResourceNotFoundException, IOException{
+        find(payment.getPaymentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Payment Record Not Found"));
+
+        paymentMap.replace(payment.getPaymentId(), payment);
+        updateFile();
+
+    }
+
+    public void updateStatus(UUID paymentId, PaymentStatus status) throws ResourceNotFoundException, IOException{
         Payment payment = find(paymentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment Record Not Found"));
 

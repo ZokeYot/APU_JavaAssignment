@@ -40,6 +40,7 @@ public class HomePatient extends javax.swing.JFrame {
         appointmentButton = new javax.swing.JButton();
         medicalRecordButton = new javax.swing.JButton();
         profileButton = new javax.swing.JButton();
+        appointmentHistoryButton = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -76,6 +77,13 @@ public class HomePatient extends javax.swing.JFrame {
             }
         });
 
+        appointmentHistoryButton.setText("View Appointment History");
+        appointmentHistoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                appointmentHistoryButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -90,8 +98,9 @@ public class HomePatient extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(appointmentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(scheduleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(medicalRecordButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(profileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(profileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(appointmentHistoryButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(medicalRecordButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(97, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -106,8 +115,10 @@ public class HomePatient extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(appointmentButton)
                 .addGap(18, 18, 18)
+                .addComponent(appointmentHistoryButton)
+                .addGap(18, 18, 18)
                 .addComponent(medicalRecordButton)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
@@ -133,8 +144,14 @@ public class HomePatient extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_profileButtonActionPerformed
 
+    private void appointmentHistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appointmentHistoryButtonActionPerformed
+       new ViewAppointmentHistory(patient, patientService);
+       dispose();
+    }//GEN-LAST:event_appointmentHistoryButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton appointmentButton;
+    private javax.swing.JButton appointmentHistoryButton;
     private javax.swing.JLabel homePageLabel;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JButton medicalRecordButton;

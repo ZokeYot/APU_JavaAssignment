@@ -1,29 +1,33 @@
 package Model.Class;
 
-import java.util.Date;
 import java.util.UUID;
 
-public class PaymentInformation {
+public class PaymentMethod {
 
-    private UUID paymentInformationId;
+    private UUID paymentMethodId;
     private Patient patient;
     private String title;
     private String card_number;
     private String bank;
     private String validUntil;
 
-    public PaymentInformation(Patient patient,String paymentInformationId, String title, String card_number, String bank, String validUntil){
+
+    public PaymentMethod(){
+
+    }
+
+    public PaymentMethod(Patient patient, String paymentMethodId, String title, String card_number, String bank, String validUntil){
         this.patient = patient;
-        this.paymentInformationId = UUID.fromString(paymentInformationId);
+        this.paymentMethodId = UUID.fromString(paymentMethodId);
         this.title = title;
         this.card_number = card_number;
         this.bank = bank;
         this.validUntil = validUntil;
     }
 
-    public PaymentInformation(Patient patient, String title, String card_number, String bank, String validUntil){
+    public PaymentMethod(Patient patient, String title, String card_number, String bank, String validUntil){
+        this.paymentMethodId = UUID.randomUUID();
         this.patient = patient;
-        this.paymentInformationId = UUID.randomUUID();
         this.title = title;
         this.card_number = card_number;
         this.bank = bank;
@@ -31,7 +35,7 @@ public class PaymentInformation {
     }
 
     public String toString(){
-        return paymentInformationId.toString() + "|" +
+        return  paymentMethodId != null ? paymentMethodId.toString() : null +  "|" +
                 patient.getUserID().toString() + "|" +
                 title + "|" +
                 card_number + "|" +
@@ -43,12 +47,12 @@ public class PaymentInformation {
         return new String[]{getTitle(), getCard_number(), getBank(), getValidUntil()};
     }
 
-    public UUID getPaymentInformationId() {
-        return paymentInformationId;
+    public UUID getPaymentMethodId() {
+        return paymentMethodId;
     }
 
-    public void setPaymentInformationId(UUID paymentInformationId) {
-        this.paymentInformationId = paymentInformationId;
+    public void setPaymentMethodId(UUID paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
     }
 
     public Patient getPatient() {

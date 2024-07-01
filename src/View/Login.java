@@ -181,6 +181,7 @@ public class Login extends javax.swing.JFrame {
             dispose();
         }catch(Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
 
     }//GEN-LAST:event_loginButtonActionPerformed

@@ -8,7 +8,7 @@ public class Payment {
 
     private UUID paymentId;
     private MedicalRecord medicalRecord;
-    private PaymentInformation paymentInformation;
+    private PaymentMethod paymentMethod;
     private Integer amount;
     private PaymentStatus status;
 
@@ -17,17 +17,18 @@ public class Payment {
     }
 
     // For file reading one
-    public Payment(String paymentId, MedicalRecord medicalRecordId, PaymentInformation paymentInformation, String amount, String status ){
+    public Payment(String paymentId, MedicalRecord medicalRecordId, PaymentMethod paymentMethod, String amount, String status ){
         this.paymentId = UUID.fromString(paymentId);
         this.medicalRecord = medicalRecordId;
-        this.paymentInformation = paymentInformation;
+        this.paymentMethod = paymentMethod;
         this.amount = Integer.valueOf(amount);
         this.status = PaymentStatus.valueOf(status);
     }
 
     // For create new payment one
-    public Payment(MedicalRecord medicalRecord, Integer amount){
+    public Payment(MedicalRecord medicalRecord,PaymentMethod paymentMethod, Integer amount){
         this.paymentId = UUID.randomUUID();
+        this.paymentMethod = paymentMethod;
         this.medicalRecord = medicalRecord;
         this.amount = amount;
         this.status = PaymentStatus.UNPAID;
@@ -35,9 +36,10 @@ public class Payment {
     
     @Override
     public String toString(){
+        String paymentMethodId = paymentMethod.getPaymentMethodId() != null ? paymentMethod.getPaymentMethodId().toString()  : null;
         return paymentId.toString() + "|" +
                 medicalRecord.getMedicalRecordID() + "|" +
-                paymentInformation.getPaymentInformationId().toString() + "|" +
+                paymentMethodId + "|" +
                 amount.toString() + "|" +
                 status.toString();
     }
@@ -51,12 +53,12 @@ public class Payment {
         this.paymentId = paymentId;
     }
 
-    public PaymentInformation getPaymentInformation() {
-        return paymentInformation;
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setPaymentInformation(PaymentInformation paymentInformation) {
-        this.paymentInformation = paymentInformation;
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public Integer getAmount() {

@@ -5,15 +5,13 @@
 package View.Patient;
 
 import Model.Class.Patient;
-import Model.Class.PaymentInformation;
-import Repository.PaymentInformationRepo;
+import Model.Class.PaymentMethod;
 import Repository.RepoFactory;
 import Service.PatientService;
 import View.Login;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,7 +23,7 @@ public class PatientUserProfile extends javax.swing.JFrame {
     private final Patient patient;
     private final PatientService patientService;
     private final DefaultTableModel table;
-    private List<PaymentInformation> paymentInformationList;
+    private List<PaymentMethod> paymentMethodList;
 
     public PatientUserProfile(Patient patient, PatientService patientService) {
         initComponents();
@@ -46,9 +44,9 @@ public class PatientUserProfile extends javax.swing.JFrame {
         weightDisplay.setText(String.valueOf(patient.getWeight()));
 
         table.setRowCount(0);
-        paymentInformationList = patientService.getPaymentInformation(patient);
-        paymentInformationList.forEach(paymentInformation -> table.addRow(new Object[]{
-                paymentInformation.getPaymentInformationId(),
+        paymentMethodList = patientService.getPaymentMethod(patient);
+        paymentMethodList.forEach(paymentInformation -> table.addRow(new Object[]{
+                paymentInformation.getPaymentMethodId(),
                 paymentInformation.getTitle(),
                 paymentInformation.getCard_number(),
                 paymentInformation.getValidUntil()
@@ -477,8 +475,8 @@ public class PatientUserProfile extends javax.swing.JFrame {
 
             checkForm(title, bank, cardNumber, year);
 
-            PaymentInformation paymentInformation = new PaymentInformation(patient, title, cardNumber, bank, month + "/" + year);
-            patientService.addPaymentInformation(paymentInformation);
+            PaymentMethod paymentMethod = new PaymentMethod(patient, title, cardNumber, bank, month + "/" + year);
+            patientService.addPaymentInformation(paymentMethod);
             JOptionPane.showMessageDialog(this, "New Payment Method Added", "Ok", JOptionPane.INFORMATION_MESSAGE);
 
             nameInput.setText("");
@@ -507,35 +505,33 @@ public class PatientUserProfile extends javax.swing.JFrame {
 
             checkForm(title, bank, cardNumber, year);
 
-            PaymentInformation paymentInformation = paymentInformationList.get(index);
+            PaymentMethod paymentMethod = paymentMethodList.get(index);
 
-            paymentInformation.setTitle(title);
-            paymentInformation.setBank(bank);
-            paymentInformation.setCard_number(cardNumber);
-            paymentInformation.setValidUntil(month + "/" + year);
+            paymentMethod.setTitle(title);
+            paymentMethod.setBank(bank);
+            paymentMethod.setCard_number(cardNumber);
+            paymentMethod.setValidUntil(month + "/" + year);
 
-            JOptionPane.showMessageDialog(this, "New Payment Method Added", "Ok", JOptionPane.INFORMATION_MESSAGE);
-            patientService.updatePaymentInformation(paymentInformation);
+            JOptionPane.showMessageDialog(this, "Payment Method Updated", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            patientService.updatePaymentInformation(paymentMethod);
             nameInput.setText("");
             bankInput.setText("");
             cardNumberInput.setText("");
             yearInput.setText("");
             init();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_updateButtonActionPerformed
-
-
-        private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         try{
             int index = paymentTable.getSelectedRow();
 
             if(index == -1)
                 throw new Exception("No Row Selected");
 
-            PaymentInformation paymentInformation = paymentInformationList.get(index);
-            patientService.deletePaymentInformation(paymentInformation);
+            PaymentMethod paymentMethod = paymentMethodList.get(index);
+            patientService.deletePaymentInformation(paymentMethod);
             JOptionPane.showMessageDialog(this, "Payment Method Deleted", "Ok", JOptionPane.INFORMATION_MESSAGE);
             init();
         }catch (Exception e){
@@ -546,10 +542,10 @@ public class PatientUserProfile extends javax.swing.JFrame {
     private void updateProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProfileButtonActionPerformed
         try{
             String name = nameDisplay.getText();
-            String password = Arrays.toString(passwordDisplay.getPassword());
+            String password = String.valueOf(passwordDisplay.getPassword());
             String gender = (String) genderDisplay.getSelectedItem();
             String height = heightDisplay.getText();
-            String weight =weightDisplay.getText();
+            String weight = weightDisplay.getText();
 
 
             if(name.trim().isEmpty())
@@ -560,9 +556,9 @@ public class PatientUserProfile extends javax.swing.JFrame {
                 throw new Exception("Height cannot be empty");
             if(weight.trim().isEmpty())
                 throw new Exception("Weight cannot be empty");
-            if(height.matches("[+]?[0-9]*\\\\.?[0-9]+\""))
+            if(!height.matches("[+]?[0-9]*\\\\.?[0-9]+\""))
                 throw new Exception("Height should be a number");
-            if(weight.matches("[+]?[0-9]*\\\\.?[0-9]+\""))
+            if(!weight.matches("[+]?[0-9]*\\\\.?[0-9]+\""))
                 throw new Exception("Weight should be a number");
 
             patient.setName(name);
@@ -587,14 +583,16 @@ public class PatientUserProfile extends javax.swing.JFrame {
     private void paymentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paymentTableMouseClicked
         int index = paymentTable.getSelectedRow();
 
-        PaymentInformation paymentInformation = paymentInformationList.get(index);
-        String[] validUntil =  paymentInformation.getValidUntil().split("/");
+
+        PaymentMethod paymentMethod = paymentMethodList.get(index);
+
+        String[] validUntil =  paymentMethod.getValidUntil().split("\\/");
         String month = validUntil[0];
         String year = validUntil[1];
 
-        nameInput.setText(paymentInformation.getTitle());
-        bankInput.setText(paymentInformation.getBank());
-        cardNumberInput.setText(paymentInformation.getCard_number());
+        nameInput.setText(paymentMethod.getTitle());
+        bankInput.setText(paymentMethod.getBank());
+        cardNumberInput.setText(paymentMethod.getCard_number());
         monthInput.setSelectedItem(month);
         yearInput.setText(year);
     }//GEN-LAST:event_paymentTableMouseClicked

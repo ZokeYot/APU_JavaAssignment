@@ -47,7 +47,6 @@ public class AppointmentRepo{
             if (!(doctor.isPresent() && patient.isPresent()))
                 throw new ResourceNotFoundException("Resources Not Found");
             Appointment appointment = new Appointment(appointmentID, doctor.get(), patient.get(), date, slot, message, status, walkIn);
-            System.out.println(appointment.getSlot());
             appointmentMap.put(UUID.fromString(appointmentID), appointment);
         }
     }

@@ -12,32 +12,29 @@ import Service.PatientService;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
-/**
- *
- * @author Siow
- */
 public class ManageAppointments extends javax.swing.JFrame {
 
     private final Patient patient;
     private final PatientService patientService;
-    private final DefaultTableModel model;
-    private final List<Appointment> appointmentList;
+    private final DefaultTableModel table;
+    private List<Appointment> appointmentList;
 
     public ManageAppointments(Patient patient, PatientService patientService) {;
         initComponents();
         setVisible(true);
-        this.model = (DefaultTableModel) appointmentTable.getModel();
+        this.table = (DefaultTableModel) appointmentTable.getModel();
         this.patient = patient;
         this.patientService = patientService;
-        this.appointmentList = patientService.getAppointments(patient);
-        this.appointmentList.sort((ap1, ap2) -> sortOrder(ap1.getAppointmentStatus()) - sortOrder(ap2.getAppointmentStatus()));
         init();
     }
 
     private void init(){
-        model.setRowCount(0);
+        appointmentList = patientService.getAppointments(patient).stream()
+                .filter(appointment ->  appointment.getAppointmentStatus().equals(AppointmentStatus.PENDING))
+                .collect(Collectors.toList());
+        table.setRowCount(0);
         appointmentList.stream()
                 .map(appointment -> new Object[]{
                         appointment.getAppointmentId(),
@@ -46,21 +43,12 @@ public class ManageAppointments extends javax.swing.JFrame {
                         appointment.getSlot(),
                         appointment.getAppointmentStatus()
                 })
-                .forEach(model::addRow);
+                .forEach(table::addRow);
     }
 
-    private int sortOrder(AppointmentStatus status){
-        int index = Integer.MAX_VALUE;
-        switch (status){
-            case CANCELLED -> index = 1;
-            case COMPLETED -> index = 2;
-            case PENDING -> index = 3;
-        }
-        return index;
-    }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold default state="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         backButton = new javax.swing.JButton();
@@ -89,23 +77,28 @@ public class ManageAppointments extends javax.swing.JFrame {
 
         backButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setText("Manage Appointments");
 
         appointmentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "AppointmentID", "Doctor", "Date", "Time Slot", "Status"
+                "Doctor", "Date", "Time Slot", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -137,6 +130,7 @@ public class ManageAppointments extends javax.swing.JFrame {
 
         doctorDisplay.setEditable(false);
         doctorDisplay.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Date:");
@@ -328,6 +322,11 @@ public class ManageAppointments extends javax.swing.JFrame {
           JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       }
     }//GEN-LAST:event_appointmentTableMouseClicked
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        new HomePatient(patient, patientService);
+        dispose();
+    }//GEN-LAST:event_backButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

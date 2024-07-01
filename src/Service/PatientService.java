@@ -1,13 +1,13 @@
 package Service;
 
 import Model.Class.*;
+import Model.Enum.PaymentStatus;
 import Model.Enum.TimeSlotStatus;
 import Repository.*;
 import Exception.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static Model.Enum.AppointmentStatus.*;
@@ -18,7 +18,9 @@ public class PatientService {
     private final AppointmentRepo appointmentRepo;
     private final MedicalRecordRepo medicalRecordRepo;
     private final PatientRepo patientRepo;
-    private final PaymentInformationRepo paymentInformationRepo;
+    private final UserRepo userRepo;
+    private final PaymentMethodRepo paymentMethodRepo;
+    private final PaymentRepo paymentRepo;
 
 
     public PatientService(RepoFactory repoFactory){
@@ -26,7 +28,9 @@ public class PatientService {
         appointmentRepo = repoFactory.getAppointmentRepo();
         medicalRecordRepo = repoFactory.getMedicalRecordRepo();
         patientRepo = repoFactory.getPatientRepo();
-        paymentInformationRepo = repoFactory.getPaymentInformationRepo();
+        userRepo = repoFactory.getUserRepo();
+        paymentMethodRepo = repoFactory.getPaymentInformationRepo();
+        paymentRepo = repoFactory.getPaymentRepo();
     }
 
     // Get patient's appointments
@@ -57,24 +61,25 @@ public class PatientService {
         scheduleRepo.updateTimeSlotStatus(appointment.getDoctor(),appointment.getSlot(), TimeSlotStatus.AVAILABLE);
     }
 
-    public List<PaymentInformation> getPaymentInformation(Patient patient){
-        return paymentInformationRepo.getPatientPaymentInformation(patient);
+    public List<PaymentMethod> getPaymentMethod(Patient patient){
+        return paymentMethodRepo.getPatientPaymentMethod(patient);
     }
 
-    public void addPaymentInformation(PaymentInformation paymentInformation) throws IOException{
-        paymentInformationRepo.create(paymentInformation);
+    public void addPaymentInformation(PaymentMethod paymentMethod) throws IOException{
+        paymentMethodRepo.create(paymentMethod);
     }
 
-    public void updatePaymentInformation(PaymentInformation paymentInformation) throws IOException, ResourceNotFoundException {
-        paymentInformationRepo.update(paymentInformation.getPaymentInformationId(), paymentInformation);
+    public void updatePaymentInformation(PaymentMethod paymentMethod) throws IOException, ResourceNotFoundException {
+        paymentMethodRepo.update(paymentMethod.getPaymentMethodId(), paymentMethod);
     }
 
-    public void deletePaymentInformation(PaymentInformation paymentInformation) throws IOException, ResourceNotFoundException {
-        paymentInformationRepo.delete(paymentInformation.getPaymentInformationId());
+    public void deletePaymentInformation(PaymentMethod paymentMethod) throws IOException, ResourceNotFoundException {
+        paymentMethodRepo.delete(paymentMethod.getPaymentMethodId());
     }
 
     public void updatePatientProfile(Patient patient) throws IOException, ResourceNotFoundException {
         patientRepo.update(patient.getUserID(), patient);
+        userRepo.update(patient.getUserID(), patient);
     }
 
     public List<MedicalRecord> getMedicalRecords(Patient patient){
@@ -91,5 +96,16 @@ public class PatientService {
                 .collect(Collectors.toList());
     }
 
+    public void makePayment(Payment payment) throws ResourceNotFoundException, IOException{
+        paymentRepo.update(payment);
+        medicalRecordRepo.update(payment.getMedicalRecord().getMedicalRecordID(), PaymentStatus.PROCESSING);
+    }
+
+
+    public Payment getPayment(MedicalRecord medicalRecord) throws Exception{
+        return paymentRepo.getPaymentList().stream()
+                .filter(payment -> payment.getMedicalRecord().equals(medicalRecord))
+                .findFirst().orElseThrow(() -> new Exception("Payment Record Not Found"));
+    }
 
 }

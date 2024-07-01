@@ -12,7 +12,7 @@ public class RepoFactory {
     private AppointmentRepo appointmentRepo;
     private MedicalRecordRepo medicalRecordRepo;
     private ScheduleRepo scheduleRepo;
-    private PaymentInformationRepo paymentInformationRepo;
+    private PaymentMethodRepo paymentMethodRepo;
     private PaymentRepo paymentRepo;
 
    public RepoFactory(){
@@ -92,15 +92,15 @@ public class RepoFactory {
        return scheduleRepo;
    }
 
-   public PaymentInformationRepo getPaymentInformationRepo(){
-        if(paymentInformationRepo == null){
+   public PaymentMethodRepo getPaymentInformationRepo(){
+        if(paymentMethodRepo == null){
             try{
-                paymentInformationRepo = new PaymentInformationRepo(getPatientRepo());
+                paymentMethodRepo = new PaymentMethodRepo(getPatientRepo());
             }catch (FileNotFoundException | ResourceNotFoundException error){
                 throw new RuntimeException(error.getMessage());
             }
         }
-        return paymentInformationRepo;
+        return paymentMethodRepo;
    }
 
    public PaymentRepo getPaymentRepo(){

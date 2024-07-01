@@ -5,8 +5,6 @@ import Repository.*;
 import Model.Class.*;
 
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -108,7 +106,7 @@ public class AdminService {
                 .map(payment -> new Object[]{
                                 payment.getPaymentId(),
                                 payment.getMedicalRecord().getMedicalRecordID(),
-                                payment.getPaymentInformation().getPatient().getName(),
+                                payment.getPaymentMethod().getPatient().getName(),
                                 payment.getAmount()
                         }
                 )
@@ -177,12 +175,12 @@ public class AdminService {
 
      for delete one just pass then settle lah
      */
-    public void delete(Doctor doctor) throws IOException, ResourceNotFoundException {
+    public void delete(Doctor doctor) throws Exception {
         userRepo.delete(doctor.getUserID());
         doctorRepo.delete(doctor.getUserID());
     }
 
-    public void delete(Patient patient) throws IOException, ResourceNotFoundException{
+    public void delete(Patient patient) throws Exception {
         userRepo.delete(patient.getUserID());
         patientRepo.delete(patient.getUserID());
     }
@@ -202,7 +200,7 @@ public class AdminService {
     // 5. Collect Payment
     // This one simple lah, use the getPayment() to get the selected payment then pass to this function settle
     public void updatePaymentStatus(Payment payment) throws IOException, ResourceNotFoundException {
-        paymentRepo.update(payment.getPaymentId(), PaymentStatus.PAID);
+        paymentRepo.updateStatus(payment.getPaymentId(), PaymentStatus.PAID);
     }
 
 }

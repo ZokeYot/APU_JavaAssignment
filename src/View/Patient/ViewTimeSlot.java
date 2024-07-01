@@ -81,6 +81,11 @@ public class ViewTimeSlot extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        scheduleTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                scheduleTableMouseDragged(evt);
+            }
+        });
         scheduleTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 scheduleTableMouseClicked(evt);
@@ -135,28 +140,23 @@ public class ViewTimeSlot extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(makeAppointmentButton)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(doctorInput, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(doctorDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(timeSlotDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(backButton))
-                        .addGap(392, 392, 392)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 982, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(doctorInput, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(doctorDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(31, 31, 31)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(timeSlotDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(backButton)))
                 .addContainerGap(22, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 982, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,9 +222,6 @@ public class ViewTimeSlot extends javax.swing.JFrame {
             int index = scheduleTable.getSelectedRow();
             UUID doctorId = (UUID) table.getValueAt(index, 0);
 
-            if(index == -1)
-                throw new Exception("No Row Selected");
-
             Doctor doctor = getSelectedDoctor(doctorId);
             String selectedSlot = scheduleTable.getValueAt(index, 3).toString();
 
@@ -248,10 +245,12 @@ public class ViewTimeSlot extends javax.swing.JFrame {
     private void makeAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeAppointmentButtonActionPerformed
         try{
             int index = scheduleTable.getSelectedRow();
-            UUID doctorId = (UUID) table.getValueAt(index, 0);
 
             if(index == -1)
                 throw new Exception("No Row Selected");
+
+
+            UUID doctorId = (UUID) table.getValueAt(index, 0);
 
             Doctor doctor = getSelectedDoctor(doctorId);
             String selectedSlot = scheduleTable.getValueAt(index, 3).toString();
@@ -260,6 +259,7 @@ public class ViewTimeSlot extends javax.swing.JFrame {
             dispose();
         }catch (Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }//GEN-LAST:event_makeAppointmentButtonActionPerformed
 
@@ -267,6 +267,22 @@ public class ViewTimeSlot extends javax.swing.JFrame {
         new HomePatient(patient, patientService);
         dispose();
     }//GEN-LAST:event_backButtonActionPerformed
+
+    private void scheduleTableMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scheduleTableMouseDragged
+         try{
+            int index = scheduleTable.getSelectedRow();
+            UUID doctorId = (UUID) table.getValueAt(index, 0);
+
+            Doctor doctor = getSelectedDoctor(doctorId);
+            String selectedSlot = scheduleTable.getValueAt(index, 3).toString();
+
+            doctorDisplay.setText(doctor.getName());
+            timeSlotDisplay.setText(selectedSlot);
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_scheduleTableMouseDragged
 
     /**
      * @param args the command line arguments

@@ -31,9 +31,8 @@ public class ScheduleRepo {
     }
 
     private void readFile() throws  ResourceNotFoundException{
+        System.out.println("Reading Schedule File.....");
         while(scanner.hasNextLine()){
-            System.out.println("Reading Schedule File.....");
-
             String[] line  = scanner.nextLine().trim().split("\\|");
             Doctor doctor = doctorRepo.find(line[0])
                     .orElseThrow(() -> new ResourceNotFoundException("Doctor Not Found"));

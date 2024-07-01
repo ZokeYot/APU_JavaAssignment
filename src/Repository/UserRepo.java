@@ -1,9 +1,13 @@
 package Repository;
 
+import Model.Class.Admin;
+import Model.Class.Doctor;
+import Model.Class.Patient;
 import Model.Class.User;
 import Exception.*;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class UserRepo {
@@ -33,7 +37,7 @@ public class UserRepo {
         }
     }
 
-    private void updateFile() throws IOException{
+    private void updateFile() throws IOException {
         BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src\\Text Files\\user.txt"));
         for(User user : userMap.values()){
             fileWriter.write(user.toString());
@@ -62,7 +66,6 @@ public class UserRepo {
 
         FileWriter fileWriter = new FileWriter("src\\Text Files\\user.txt", true);
 
-        System.out.println(user.toString());
         fileWriter.write(user.toString());
         fileWriter.write("\n");
 
@@ -71,14 +74,16 @@ public class UserRepo {
     }
 
     public void update(UUID userId , User newUser) throws ResourceNotFoundException, IOException {
-        find(userId)
+        User user = find(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
-        userMap.replace(userId, newUser);
+        user.setName(newUser.getName());
+        user.setPassword(newUser.getPassword());
+        userMap.replace(userId, user);
         updateFile();
     }
 
-    public void delete(UUID userId) throws ResourceNotFoundException, IOException{
+    public void delete(UUID userId) throws ResourceNotFoundException, IOException {
          find(userId)
                  .orElseThrow(() -> new ResourceNotFoundException("User Not Found") );
 

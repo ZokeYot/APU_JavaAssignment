@@ -9,19 +9,16 @@ import Exception.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MedicalRecordRepo {
 
     private final AppointmentRepo appointmentRepo;
-    private final Map<UUID, List<MedicalRecord>> doctorMedicalRecordMap;
-    private final Map<UUID, List<MedicalRecord>> patientMedicalRecordMap;
     private final Map<UUID, MedicalRecord> medicalRecordMap;
     private final Scanner scanner;
 
     public MedicalRecordRepo(AppointmentRepo appointmentRepo) throws FileNotFoundException, ResourceNotFoundException{
         this.appointmentRepo = appointmentRepo;
-        doctorMedicalRecordMap = new HashMap<>();
-        patientMedicalRecordMap = new HashMap<>();
         medicalRecordMap = new HashMap<>();
         scanner = new Scanner(new File("src\\Text Files\\medical record.txt"));
 
@@ -30,9 +27,8 @@ public class MedicalRecordRepo {
 
 
     private void readFile() throws ResourceNotFoundException{
+        System.out.println("Reading Medical Record File.....");
         while (scanner.hasNextLine()){
-            System.out.println("Reading Doctor File.....");
-
             String[] line = scanner.nextLine().trim().split("\\|");
 
             String medicalRecordId = line[0];
@@ -46,18 +42,6 @@ public class MedicalRecordRepo {
 
             MedicalRecord medicalRecord = new MedicalRecord(appointment, medicalRecordId, diagnosisResult, recommendation, status);
             medicalRecordMap.put(medicalRecord.getMedicalRecordID(), medicalRecord);
-        }
-
-        for(MedicalRecord medicalRecord : medicalRecordMap.values()){
-            UUID patientId = medicalRecord.getPatient().getUserID();
-            UUID doctorId = medicalRecord.getDoctor().getUserID();
-            patientMedicalRecordMap
-                    .computeIfAbsent(patientId, k -> new ArrayList<>())
-                    .add(medicalRecord);
-
-            doctorMedicalRecordMap
-                    .computeIfAbsent(doctorId, k -> new ArrayList<>())
-                    .add(medicalRecord);
         }
     }
 
@@ -75,9 +59,17 @@ public class MedicalRecordRepo {
 
     public List<MedicalRecord> getMedicalRecordList(){ return medicalRecordMap.values().stream().toList();}
 
-    public List<MedicalRecord> getMedicalRecord(Patient patient){ return patientMedicalRecordMap.get(patient.getUserID());}
+    public List<MedicalRecord> getMedicalRecord(Patient patient){
+        return medicalRecordMap.values()
+                .stream()
+                .filter(medicalRecord -> medicalRecord.getPatient().equals(patient))
+                .collect(Collectors.toList());}
 
-    public List<MedicalRecord> getMedicalRecord(Doctor doctor){ return doctorMedicalRecordMap.get(doctor.getUserID());}
+    public List<MedicalRecord> getMedicalRecord(Doctor doctor){
+        return medicalRecordMap.values()
+                .stream()
+                .filter(medicalRecord -> medicalRecord.getDoctor().equals(doctor))
+                .collect(Collectors.toList());}
 
     public Optional<MedicalRecord> find(UUID medicalRecordId){ return Optional.ofNullable(medicalRecordMap.get(medicalRecordId));}
 

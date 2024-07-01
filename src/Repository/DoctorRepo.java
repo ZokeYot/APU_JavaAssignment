@@ -24,8 +24,8 @@ public class DoctorRepo {
 
 
     private void readFile(){
+        System.out.println("Reading Doctor File.....");
         while(scanner.hasNextLine()){
-            System.out.println("Reading Doctor File.....");
             String[] line = scanner.nextLine().trim().split("\\|");
             UUID userId = UUID.fromString(line[0]);
             String gender = line[1];

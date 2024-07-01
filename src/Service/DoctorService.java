@@ -92,7 +92,7 @@ public class DoctorService {
     public void createMedicalRecord(MedicalRecord medicalRecord) throws ResourceNotFoundException, IOException {
         medicalRecordRepo.create(medicalRecord);
         appointmentRepo.update(medicalRecord.getAppointmentId(), COMPLETED);
-        paymentRepo.create(new Payment(medicalRecord, 100));
+        paymentRepo.create(new Payment(medicalRecord,new PaymentMethod(), 100));
     }
 
     public void updateDoctorProfile(Doctor doctor) throws ResourceNotFoundException, IOException {
