@@ -7,6 +7,7 @@ import Model.Class.TimeSlot;
 import java.io.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 import Exception.*;
@@ -78,13 +79,14 @@ public class ScheduleRepo {
 
     public void update(UUID doctorId, List<TimeSlot> timeSlots) throws ResourceNotFoundException, IOException{
         Optional<Schedule> schedule = find(doctorId);
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        String date = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         if(schedule.isEmpty()){
             Doctor doctor = doctorRepo.find(doctorId)
                     .orElseThrow(() -> new ResourceNotFoundException("Doctor Not Found"));
             create(new Schedule(doctor, date, timeSlots));
         }
         else{
+            schedule.get().setDate(date);
             schedule.get().setTimeslots(timeSlots);
             updateFile();
         }

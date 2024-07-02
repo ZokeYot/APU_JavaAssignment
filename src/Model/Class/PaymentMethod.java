@@ -35,7 +35,8 @@ public class PaymentMethod {
     }
 
     public String toString(){
-        return  paymentMethodId != null ? paymentMethodId.toString() : null +  "|" +
+        String id = paymentMethodId != null ? paymentMethodId.toString() : "null";
+        return  id +  "|" +
                 patient.getUserID().toString() + "|" +
                 title + "|" +
                 card_number + "|" +

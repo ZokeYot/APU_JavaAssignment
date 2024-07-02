@@ -46,9 +46,14 @@ public class AddPaymentMethod extends javax.swing.JFrame {
     }
 
 
-    private void checkForm(String title, String bank, String cardNumber, String year) throws Exception{
+    private void checkForm(String title, String bank, String cardNumber, String year, String month) throws Exception{
         String cardNumberRegex = "^\\d{10}$";
         String yearRegex = "^\\d{4}$";
+
+        String yearNow = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy"));
+        String monthNow = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("MM"));
+
+
 
         if(title.trim().isEmpty())
             throw new Exception("The title cannot be empty");
@@ -62,6 +67,12 @@ public class AddPaymentMethod extends javax.swing.JFrame {
             throw new Exception("The valid until year cannot be empty");
         if(!year.matches(yearRegex))
             throw new Exception("Incorrect format for the valid until year");
+        if(Integer.parseInt(yearNow) > Integer.parseInt(year))
+            throw new Exception("The year has already passed");
+        if(Integer.parseInt(yearNow) == Integer.parseInt(year) && Integer.parseInt(monthNow) >= Integer.parseInt(month))
+            throw new Exception("The valid until date is already expired");
+
+
     }
 
     @SuppressWarnings("unchecked")
@@ -307,7 +318,7 @@ public class AddPaymentMethod extends javax.swing.JFrame {
             String month = (String) monthInput.getSelectedItem();
             String year = yearInput.getText();
 
-            checkForm(title, bank, cardNumber, year);
+            checkForm(title, bank, cardNumber, year,month);
 
             PaymentMethod paymentMethod = new PaymentMethod(patient, title, cardNumber, bank, month + "/" + year);
             patientService.addPaymentInformation(paymentMethod);
@@ -336,7 +347,7 @@ public class AddPaymentMethod extends javax.swing.JFrame {
             String month = (String) monthInput.getSelectedItem();
             String year = yearInput.getText();
 
-            checkForm(title, bank, cardNumber, year);
+            checkForm(title, bank, cardNumber, year,month);
 
             PaymentMethod paymentMethod = paymentMethodList.get(index);
 

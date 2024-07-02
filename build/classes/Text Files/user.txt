@@ -2,3 +2,4 @@
 92b4838a-062d-4535-8940-8474bce607d2|admin|admin@gmail.com|1234|admin
 92b4838a-062d-4545-8940-8374bce607d2|doctor2|doctor2@gmail.com|1234|doctor
 c5a85841-7af1-457b-b803-4c05e9e4de0d|ZokeYot|patient1@gmail.com|11|patient
+3752ffdc-a129-4ed4-a03f-e75ea4dfab58|Dylan|dylanlam3804@gmail.com|123|patient

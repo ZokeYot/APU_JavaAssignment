@@ -10,7 +10,6 @@ import Repository.RepoFactory;
 import Service.RegisterService;
 import View.Patient.HomePatient;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -19,13 +18,13 @@ import javax.swing.JOptionPane;
  *
  * @author Siow
  */
-public class RegisterView extends javax.swing.JFrame  {
+public class Register extends javax.swing.JFrame  {
 
     private RepoFactory repoFactory;
     private RegisterService registerService;
 
     
-    public RegisterView(RepoFactory repoFactory){
+    public Register(RepoFactory repoFactory){
         this.repoFactory = repoFactory;
         this.registerService = new RegisterService(repoFactory);
         initComponents();
