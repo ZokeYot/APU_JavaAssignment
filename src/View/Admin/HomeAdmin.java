@@ -4,6 +4,7 @@ package View.Admin;
 import Model.Class.Admin;
 import Repository.RepoFactory;
 import Service.AdminService;
+import java.io.FileNotFoundException;
 
 public class HomeAdmin extends javax.swing.JFrame {
 
@@ -133,19 +134,25 @@ public class HomeAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_ManageRegistrationActionPerformed
 
     private void TrackMedicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TrackMedicalActionPerformed
-        new TrackMedicalRecord(admin, adminService);
+        TrackMedicalRecord Trk = new TrackMedicalRecord(admin, adminService);
+        Trk.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_TrackMedicalActionPerformed
 
     private void ViewDailyAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewDailyAppointmentActionPerformed
-        new TrackDailyAppointment(admin, adminService);
+        TrackDailyAppointment Appt = new TrackDailyAppointment(admin, adminService);
+        Appt.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_ViewDailyAppointmentActionPerformed
 
     private void CollectPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CollectPaymentActionPerformed
-        CollectPayment payment = new CollectPayment(admin, adminService);
-        payment.setVisible(true);
-        this.dispose();
+        try{
+            CollectPayment payment = new CollectPayment(admin, adminService);
+            payment.setVisible(true);
+            this.dispose();
+        }catch(FileNotFoundException ex) {
+            
+        }
     }//GEN-LAST:event_CollectPaymentActionPerformed
 
     /**
