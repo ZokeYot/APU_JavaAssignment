@@ -22,6 +22,10 @@ public class TrackMedicalRecord extends javax.swing.JFrame {
         this.admin = admin;
         this.adminService = adminService;
     }
+
+    TrackMedicalRecord() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
