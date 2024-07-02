@@ -14,6 +14,7 @@ import Service.PatientService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -193,7 +194,9 @@ public class ViewTimeSlot extends javax.swing.JFrame {
         scheduleList.forEach(schedule -> comboBox.addElement(schedule.getDoctor().getName()));
     }
     private void showAllTimeSlot(){
+        String date = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         scheduleList.stream()
+                .filter(schedule -> schedule.getDate().equals(date))
                 .flatMap(schedule -> schedule.getTimeslots().stream()
                         .filter(timeSlot -> timeSlot.getStatus().equals(TimeSlotStatus.AVAILABLE))
                         .map(slot -> new Object[]{schedule.getDoctor().getUserID(), schedule.getDoctor().getName(), schedule.getDate(), slot.getTimeslot()}))
