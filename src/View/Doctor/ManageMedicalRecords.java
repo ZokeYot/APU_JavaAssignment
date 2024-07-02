@@ -71,10 +71,10 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 36)); // NOI18N
         jLabel1.setText("View Medical Record");
 
-        backButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        backButton.setFont(new java.awt.Font("Segoe UI Semibold", 1, 18)); // NOI18N
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -82,6 +82,7 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
             }
         });
 
+        medicalRecordTable.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         medicalRecordTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -90,7 +91,7 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Medical Record ID ", "Appointmetn ID ", "Doctor", "Patient ", "Date", "Time"
+                "Medical Record ID ", "Appointment ID ", "Doctor", "Patient ", "Date", "Time"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -121,30 +122,33 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
         jLabel3.setText("Medical Record Details");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel4.setText("Patient Message:");
 
         recommendationDisplay.setEditable(false);
         recommendationDisplay.setColumns(20);
+        recommendationDisplay.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         recommendationDisplay.setRows(5);
         jScrollPane2.setViewportView(recommendationDisplay);
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel5.setText("Diagnosis Result:");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel6.setText("Doctor Recommendation: ");
 
         messageDisplay.setEditable(false);
         messageDisplay.setColumns(20);
+        messageDisplay.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         messageDisplay.setRows(5);
         jScrollPane3.setViewportView(messageDisplay);
 
         resultDisplay.setEditable(false);
         resultDisplay.setColumns(20);
+        resultDisplay.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         resultDisplay.setRows(5);
         jScrollPane4.setViewportView(resultDisplay);
 
@@ -220,7 +224,7 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
