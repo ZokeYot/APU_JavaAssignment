@@ -65,17 +65,17 @@ public class ViewTimeSlot extends javax.swing.JFrame {
 
         scheduleTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "DoctorID ", "Doctor ", "Date", "Time Slot"
+                "DoctorID ", "Doctor ", "Date", "Time Slot", "Department"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -199,7 +199,7 @@ public class ViewTimeSlot extends javax.swing.JFrame {
                 .filter(schedule -> schedule.getDate().equals(date))
                 .flatMap(schedule -> schedule.getTimeslots().stream()
                         .filter(timeSlot -> timeSlot.getStatus().equals(TimeSlotStatus.AVAILABLE))
-                        .map(slot -> new Object[]{schedule.getDoctor().getUserID(), schedule.getDoctor().getName(), schedule.getDate(), slot.getTimeslot()}))
+                        .map(slot -> new Object[]{schedule.getDoctor().getUserID(), schedule.getDoctor().getName(), schedule.getDate(), slot.getTimeslot(), schedule.getDoctor().getDepartment()}))
                 .forEach(table::addRow);
     }
 

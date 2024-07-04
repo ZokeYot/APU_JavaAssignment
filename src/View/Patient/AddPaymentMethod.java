@@ -24,7 +24,7 @@ public class AddPaymentMethod extends javax.swing.JFrame {
     private final PatientService patientService;
     private final DefaultTableModel table;
     private List<PaymentMethod> paymentMethodList;
-    private MedicalRecord medicalRecord;
+    private final MedicalRecord medicalRecord;
 
     public AddPaymentMethod(Patient patient, PatientService patientService, MedicalRecord medicalRecord) {
         initComponents();
@@ -32,6 +32,8 @@ public class AddPaymentMethod extends javax.swing.JFrame {
         this.patient = patient;
         this.patientService = patientService;
         this.table = (DefaultTableModel) paymentTable.getModel();
+        this.medicalRecord = medicalRecord;
+        init();
     }
 
     private void init(){
@@ -324,11 +326,8 @@ public class AddPaymentMethod extends javax.swing.JFrame {
             patientService.addPaymentInformation(paymentMethod);
             JOptionPane.showMessageDialog(this, "New Payment Method Added", "Ok", JOptionPane.INFORMATION_MESSAGE);
 
-            nameInput.setText("");
-            bankInput.setText("");
-            cardNumberInput.setText("");
-            yearInput.setText("");
-            init();
+            new MakePayment(patient, patientService, medicalRecord);
+            dispose();
         }catch (Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

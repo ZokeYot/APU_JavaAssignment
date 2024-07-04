@@ -63,6 +63,7 @@ public class RepoFactory {
            try{
                appointmentRepo = new AppointmentRepo(getDoctorRepo(), getPatientRepo());
            }catch (FileNotFoundException | ResourceNotFoundException error){
+               error.printStackTrace();
                throw new RuntimeException(error.getMessage());
            }
        }

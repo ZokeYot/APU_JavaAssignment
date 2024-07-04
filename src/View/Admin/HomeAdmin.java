@@ -12,12 +12,14 @@ public class HomeAdmin extends javax.swing.JFrame {
 
     public HomeAdmin(Admin admin, RepoFactory repoFactory){
         initComponents();
+        setVisible(true);
         this.admin = admin;
         this.adminService = new AdminService(repoFactory);
     }
 
     public HomeAdmin(Admin admin, AdminService adminService){
         initComponents();
+        setVisible(true);
         this.admin = admin;
         this.adminService = adminService;
     }
@@ -34,6 +36,7 @@ public class HomeAdmin extends javax.swing.JFrame {
         TrackMedical = new javax.swing.JButton();
         ViewDailyAppointment = new javax.swing.JButton();
         CollectPayment = new javax.swing.JButton();
+        profileButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,6 +83,14 @@ public class HomeAdmin extends javax.swing.JFrame {
             }
         });
 
+        profileButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        profileButton.setText("View Admin Profile");
+        profileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profileButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,14 +100,18 @@ public class HomeAdmin extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(197, 197, 197)
                         .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(211, 211, 211)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(RegisterWalkIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ManageRegistration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(TrackMedical, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ViewDailyAppointment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(CollectPayment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(profileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGap(211, 211, 211)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(RegisterWalkIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ManageRegistration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(TrackMedical, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ViewDailyAppointment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(CollectPayment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap(200, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -104,17 +119,19 @@ public class HomeAdmin extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(65, 65, 65)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(50, 50, 50)
+                .addComponent(profileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(ManageRegistration, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
+                .addGap(29, 29, 29)
                 .addComponent(RegisterWalkIn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addGap(31, 31, 31)
                 .addComponent(TrackMedical, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
+                .addGap(31, 31, 31)
                 .addComponent(ViewDailyAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
+                .addGap(40, 40, 40)
                 .addComponent(CollectPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(137, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
 
         pack();
@@ -147,6 +164,11 @@ public class HomeAdmin extends javax.swing.JFrame {
         payment.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_CollectPaymentActionPerformed
+
+    private void profileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButtonActionPerformed
+        new AdminUserProfile(admin, adminService);
+        this.dispose();
+    }//GEN-LAST:event_profileButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -190,5 +212,6 @@ public class HomeAdmin extends javax.swing.JFrame {
     private javax.swing.JButton TrackMedical;
     private javax.swing.JButton ViewDailyAppointment;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton profileButton;
     // End of variables declaration//GEN-END:variables
 }

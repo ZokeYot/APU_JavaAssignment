@@ -107,9 +107,6 @@ public class ScheduleRepo {
 
 
     public void delete(UUID doctorId) throws ResourceNotFoundException, IOException{
-        Schedule schedule = find(doctorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Schedule Not Found !!"));
-
         scheduleMap.remove(doctorId);
         updateFile();
     }

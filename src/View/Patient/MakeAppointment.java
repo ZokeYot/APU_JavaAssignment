@@ -10,6 +10,8 @@ import Service.PatientService;
 
 import javax.print.Doc;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -54,9 +56,40 @@ public class MakeAppointment extends javax.swing.JFrame {
     }
 
     private void init(){
-        patientDisplay.setText(patient.getName());
-        doctorModel.removeAllElements();
-        scheduleList.forEach(schedule -> doctorModel.addElement(schedule.getDoctor().getName()));
+        try{
+            patientDisplay.setText(patient.getName());
+            doctorModel.removeAllElements();
+            if(scheduleList.isEmpty())
+                throw new Exception("The doctors haven't upload the today schedule. Therefore you can't make appointment yet");
+            scheduleList.forEach(schedule -> doctorModel.addElement(schedule.getDoctor().getName()));
+
+            descriptionInput.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    updateDescriptionDisplay();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    updateDescriptionDisplay();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    updateDescriptionDisplay();
+                }
+
+                private void updateDescriptionDisplay(){
+                    descriptionDisplay.setText(descriptionInput.getText());
+                }
+            });
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            new HomePatient(patient, patientService);
+            dispose();
+        }
+
     }
 
     private void preset(Doctor doctor, String timeSlot){
@@ -108,7 +141,7 @@ public class MakeAppointment extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, null, java.awt.Color.black, new java.awt.Color(51, 51, 51)));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setText("Appointment Status");
+        jLabel2.setText("Appointment Details");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Patient Name : ");
@@ -134,8 +167,9 @@ public class MakeAppointment extends javax.swing.JFrame {
 
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setText("Messages: ");
+        jLabel8.setText("Patient Symptoms / Messages");
 
+        descriptionDisplay.setEditable(false);
         descriptionDisplay.setColumns(20);
         descriptionDisplay.setRows(5);
         jScrollPane1.setViewportView(descriptionDisplay);
@@ -149,21 +183,23 @@ public class MakeAppointment extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(patientDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(timeSlotDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(patientDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(doctorDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(timeSlotDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(doctorDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(58, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(

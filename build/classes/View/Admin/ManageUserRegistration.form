@@ -23,15 +23,20 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="topPanel" min="-2" max="-2" attributes="0"/>
-          <Component id="cardPanel" min="-2" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="topPanel" min="-2" max="-2" attributes="0"/>
+                  <Component id="cardPanel" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Component id="topPanel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="cardPanel" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -101,17 +106,41 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="jTable1">
+                <Component class="javax.swing.JTable" name="doctorTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="4">
-                        <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 4" type="java.lang.Object"/>
+                      <Table columnCount="3" rowCount="4">
+                        <Column editable="true" title="Doctor" type="java.lang.Object"/>
+                        <Column editable="false" title="Email" type="java.lang.Object"/>
+                        <Column editable="false" title="Department" type="java.lang.Object"/>
                       </Table>
                     </Property>
+                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                      <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                      </TableColumnModel>
+                    </Property>
+                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                    </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="doctorTableMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -169,9 +198,7 @@
                           <Component id="doctorAddButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="doctorDeleteButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="doctorUpdateButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -205,7 +232,6 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="doctorAddButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="doctorDeleteButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="doctorUpdateButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       </Group>
@@ -243,9 +269,6 @@
                       <Font name="Segoe UI" size="14" style="0"/>
                     </Property>
                   </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="doctorNameInputActionPerformed"/>
-                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="doctorEmailInput">
                   <Properties>
@@ -345,17 +368,6 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="doctorDeleteButtonActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="doctorUpdateButton">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Segoe UI" size="14" style="1"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Update"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="doctorUpdateButtonActionPerformed"/>
-                  </Events>
-                </Component>
               </SubComponents>
             </Container>
             <Component class="javax.swing.JLabel" name="jLabel16">
@@ -385,7 +397,7 @@
                           <Component id="jScrollPane1" max="32767" attributes="0"/>
                           <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="27" max="32767" attributes="0"/>
+                      <EmptySpace pref="33" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -398,7 +410,7 @@
                       <Component id="jScrollPane1" min="-2" pref="139" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="30" max="32767" attributes="0"/>
+                      <EmptySpace pref="35" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -422,14 +434,32 @@
                 <Component class="javax.swing.JTable" name="patientTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="4">
-                        <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 4" type="java.lang.Object"/>
+                      <Table columnCount="2" rowCount="4">
+                        <Column editable="false" title="Patient" type="java.lang.Object"/>
+                        <Column editable="false" title="Email" type="java.lang.Object"/>
                       </Table>
                     </Property>
+                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                      <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                      </TableColumnModel>
+                    </Property>
+                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                    </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="patientTableMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -448,6 +478,13 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="patientAddButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="patientDeleteButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+                      </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace min="24" pref="24" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -489,27 +526,18 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="heightInput" min="-2" pref="183" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="heightInput" min="-2" pref="177" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                                   <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="weightInput" min="-2" pref="183" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="weightInput" min="-2" pref="177" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace pref="340" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="patientAddButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="patientDeleteButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="patientUpdateButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
@@ -548,16 +576,15 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="heightInput" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="weightInput" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="heightInput" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="weightInput" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="57" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="patientAddButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="patientDeleteButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="patientUpdateButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                       </Group>
@@ -698,20 +725,6 @@
                     <Property name="text" type="java.lang.String" value="Weight:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JPasswordField" name="heightInput">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Segoe UI" size="14" style="0"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JPasswordField" name="weightInput">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Segoe UI" size="14" style="0"/>
-                    </Property>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JLabel" name="jLabel13">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -750,16 +763,19 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="patientDeleteButtonActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="patientUpdateButton">
+                <Component class="javax.swing.JTextField" name="heightInput">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Segoe UI" size="14" style="1"/>
+                      <Font name="Segoe UI" size="14" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Update"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="patientUpdateButtonActionPerformed"/>
-                  </Events>
+                </Component>
+                <Component class="javax.swing.JTextField" name="weightInput">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Segoe UI" size="14" style="0"/>
+                    </Property>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>
@@ -805,7 +821,7 @@
                       <Component id="patientButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="doctorButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="57" max="32767" attributes="0"/>
+                  <EmptySpace pref="27" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

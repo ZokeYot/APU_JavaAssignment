@@ -101,4 +101,13 @@ public class AppointmentRepo{
             updateFile();
     }
 
+    public void delete(UUID userID) throws IOException {
+        appointmentMap.entrySet().
+                removeIf(appointment ->
+                        appointment.getValue().getDoctor().getUserID().equals(userID) ||
+                        appointment.getValue().getPatient().getUserID().equals(userID));
+
+        updateFile();
+    }
+
 }

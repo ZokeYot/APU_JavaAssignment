@@ -55,8 +55,6 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
         backButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         medicalRecordTable = new javax.swing.JTable();
-        searchInput = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -108,16 +106,6 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(medicalRecordTable);
-
-        searchInput.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        searchInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchInputActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setText("Search Patient :");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
@@ -200,11 +188,7 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(backButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 243, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchInput, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(15, 15, 15))
         );
@@ -212,14 +196,9 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(backButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(searchInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)))
+                .addComponent(backButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -234,29 +213,6 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
         new HomeDoctor(doctor, doctorService);
         dispose();
     }//GEN-LAST:event_backButtonActionPerformed
-
-    private void searchInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchInputActionPerformed
-        String search = searchInput.getText();
-
-        Optional<Patient> find = doctorService.searchPatient(search.toLowerCase());
-        if(find.isPresent()){
-            Patient patient = find.get();
-            List<MedicalRecord> patientMedicalRecords = doctorService.getPatientMedicalRecords(patient);
-            table.setRowCount(0);
-            patientMedicalRecords.forEach(medicalRecord ->
-                table.addRow(
-                        new Object[]{
-                                medicalRecord.getMedicalRecordID(),
-                                medicalRecord.getAppointmentId(),
-                                medicalRecord.getDoctor().getName(),
-                                medicalRecord.getPatient().getName(),
-                                medicalRecord.getDate(),
-                                medicalRecord.getSlot()}
-
-            ));
-
-        }
-    }//GEN-LAST:event_searchInputActionPerformed
 
     private void medicalRecordTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_medicalRecordTableMouseClicked
        try{
@@ -281,7 +237,6 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -295,6 +250,5 @@ public class ManageMedicalRecords extends javax.swing.JFrame {
     private javax.swing.JTextArea messageDisplay;
     private javax.swing.JTextArea recommendationDisplay;
     private javax.swing.JTextArea resultDisplay;
-    private javax.swing.JTextField searchInput;
     // End of variables declaration//GEN-END:variables
 }

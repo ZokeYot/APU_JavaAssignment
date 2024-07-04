@@ -94,4 +94,12 @@ public class MedicalRecordRepo {
         updateFile();
     }
 
+    public void delete(UUID userID) throws IOException {
+        medicalRecordMap.entrySet().removeIf(medicalRecord ->
+                medicalRecord.getValue().getDoctor().getUserID().equals(userID) ||
+                        medicalRecord.getValue().getPatient().getUserID().equals(userID));
+
+        updateFile();
+    }
+
 }

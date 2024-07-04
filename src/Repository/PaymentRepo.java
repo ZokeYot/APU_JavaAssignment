@@ -93,4 +93,14 @@ public class PaymentRepo {
         updateFile();
     }
 
+    public void delete(List<UUID> medicalRecordIDList) throws IOException {
+        for(UUID medicalRecordID : medicalRecordIDList){
+            for(Payment payment : paymentMap.values()){
+                if(payment.getMedicalRecord().getMedicalRecordID().equals(medicalRecordID)){
+                    paymentMap.remove(payment.getPaymentId());
+                    break;
+                }
+            }
+        }
+    }
 }

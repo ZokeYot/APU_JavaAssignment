@@ -60,6 +60,7 @@ public class DoctorUserProfile extends javax.swing.JFrame {
         emailDisplay.setText(doctor.getEmail());
         nameDisplay.setText(doctor.getName());
         passwordDisplay.setText(doctor.getPassword());
+        System.out.println(doctor.getPassword());
         departmentDisplay.setText(doctor.getDepartment());
         genderDisplay.setSelectedItem(doctor.getGender());
     }
@@ -357,7 +358,7 @@ public class DoctorUserProfile extends javax.swing.JFrame {
     private void updateProfileButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProfileButton1ActionPerformed
        try{
            String name = nameDisplay.getText();
-           String password = Arrays.toString(passwordDisplay.getPassword());
+           String password = String.valueOf(passwordDisplay.getPassword());
            String gender = genderDisplay.getSelectedItem().toString();
            String department = departmentDisplay.getText();
 
@@ -375,7 +376,7 @@ public class DoctorUserProfile extends javax.swing.JFrame {
 
            doctorService.updateDoctorProfile(doctor);
            JOptionPane.showMessageDialog(this,"Profile Updated", "OK", JOptionPane.INFORMATION_MESSAGE);
-           new HomeDoctor(doctor, doctorService);
+           init();
        }catch (Exception e){
             JOptionPane.showMessageDialog(this,e.getMessage(),"Error", JOptionPane.ERROR_MESSAGE);
        }

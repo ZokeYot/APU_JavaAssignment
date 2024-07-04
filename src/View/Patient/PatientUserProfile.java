@@ -564,9 +564,9 @@ public class PatientUserProfile extends javax.swing.JFrame {
                 throw new Exception("Height cannot be empty");
             if(weight.trim().isEmpty())
                 throw new Exception("Weight cannot be empty");
-            if(!height.matches("[+]?[0-9]*\\\\.?[0-9]+\""))
+            if(!height.matches("[+]?[0-9]*\\.?[0-9]+"))
                 throw new Exception("Height should be a number");
-            if(!weight.matches("[+]?[0-9]*\\\\.?[0-9]+\""))
+            if(!weight.matches("[+]?[0-9]*\\.?[0-9]+"))
                 throw new Exception("Weight should be a number");
 
             patient.setName(name);

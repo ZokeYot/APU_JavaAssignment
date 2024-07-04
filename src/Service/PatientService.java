@@ -7,6 +7,7 @@ import Repository.*;
 import Exception.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,8 +42,13 @@ public class PatientService {
 
     // Get the available doctors schedule
     public List<Schedule> getSchedules(){
-        return scheduleRepo.getScheduleList().stream()
-                .filter(schedule -> schedule.getTimeslots().stream()
+        String today = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+        List<Schedule> todaySchedule = scheduleRepo.getScheduleList().stream()
+                .filter(schedule -> schedule.getDate().equals(today)).toList();
+
+
+        return todaySchedule.stream().filter(schedule ->  schedule.getTimeslots().stream()
                         .anyMatch(timeSlot -> timeSlot.getStatus().equals(TimeSlotStatus.AVAILABLE)))
                 .collect(Collectors.toList());
     }
@@ -97,6 +103,7 @@ public class PatientService {
     }
 
     public void makePayment(Payment payment) throws ResourceNotFoundException, IOException{
+        payment.setStatus(PaymentStatus.PROCESSING);
         paymentRepo.update(payment);
         medicalRecordRepo.update(payment.getMedicalRecord().getMedicalRecordID(), PaymentStatus.PROCESSING);
     }
